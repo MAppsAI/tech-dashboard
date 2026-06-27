@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Screener — Live Dashboard</title>
+<style>
+:root {
+  --bg:#0a0e17; --card:#111827; --card2:#1a2332; --border:#1e293b;
+  --text:#e2e8f0; --muted:#94a3b8; --dim:#64748b;
+  --accent:#22d3ee; --green:#10b981; --red:#ef4444; --yellow:#f59e0b;
+  --purple:#a855f7; --orange:#f97316; --pink:#ec4899;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.6;overflow-x:hidden}
+.c{max-width:1400px;margin:0 auto;padding:20px}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.header h1{font-size:1.6rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.live-dot{width:10px;height:10px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;display:inline-block}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,0.4)}50%{opacity:.8;box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+.header-right{display:flex;align-items:center;gap:16px;font-size:0.85rem;color:var(--muted)}
+.update-time{color:var(--dim);font-size:0.8rem}
+
+/* Regime Banner */
+.regime-banner{border-radius:12px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.regime-banner.strong-up{background:linear-gradient(135deg,#10b98115,#10b98125);border:2px solid #10b98155}
+.regime-banner.up{background:linear-gradient(135deg,#f59e0b15,#f59e0b25);border:2px solid #f59e0b55}
+.regime-banner.weak{background:linear-gradient(135deg,#ef444415,#ef444425);border:2px solid #ef444455}
+.regime-left{display:flex;align-items:center;gap:16px}
+.regime-label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)}
+.regime-value{font-size:1.8rem;font-weight:700}
+.regime-exposure{font-size:0.9rem;margin-top:2px}
+.regime-metrics{display:flex;gap:24px;flex-wrap:wrap}
+.regime-metric{text-align:center}
+.regime-metric .val{font-size:1.3rem;font-weight:700}
+.regime-metric .lbl{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted)}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;transition:border-color 0.2s}
+.card:hover{border-color:#334155}
+.cl{color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.cv{font-size:1.6rem;font-weight:700}
+.cs{color:var(--muted);font-size:0.8rem;margin-top:2px}
+
+/* Section */
+.section{margin-bottom:28px}
+.section-title{font-size:1.2rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title .icon{font-size:1rem}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);margin-left:8px}
+
+/* Theme Ranking */
+.theme-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;transition:background 0.2s}
+.theme-row:hover{background:var(--card2)}
+.theme-row.leader{border-left:3px solid var(--accent);background:linear-gradient(90deg,#22d3ee08,transparent)}
+.theme-row.runner{border-left:3px solid var(--yellow)}
+.theme-rank{font-size:1.1rem;font-weight:700;color:var(--dim);width:24px;text-align:center}
+.theme-name{font-weight:600;flex:0 0 140px}
+.theme-bar-wrap{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;min-width:60px}
+.theme-bar{height:100%;border-radius:4px;transition:width 0.6s}
+.theme-ret{font-weight:600;font-size:0.9rem;width:60px;text-align:right}
+.theme-qual{font-size:0.75rem;color:var(--muted);width:50px;text-align:right}
+.theme-badge{font-size:0.65rem;font-weight:700;padding:2px 6px;border-radius:3px;text-transform:uppercase}
+
+/* Stock Tables */
+.stock-table{width:100%;border-collapse:collapse;font-size:0.85rem}
+.stock-table th{background:var(--card2);color:var(--accent);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);position:sticky;top:0}
+.stock-table td{padding:7px 10px;border-bottom:1px solid #1e293b44}
+.stock-table tr:hover{background:var(--card2)}
+.stock-table tr.t1-dip{border-left:3px solid var(--green)}
+.stock-table tr.t1-mom{border-left:3px solid var(--accent)}
+.stock-table tr.t2{border-left:3px solid var(--yellow)}
+.stock-table tr.t3{border-left:3px solid var(--purple)}
+.ticker{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:0.9rem}
+.badge{display:inline-block;padding:1px 6px;border-radius:3px;font-size:0.65rem;font-weight:700}
+.b-green{background:#10b98122;color:var(--green)}
+.b-accent{background:#22d3ee22;color:var(--accent)}
+.b-yellow{background:#f59e0b22;color:var(--yellow)}
+.b-purple{background:#a855f722;color:var(--purple)}
+.b-red{background:#ef444422;color:var(--red)}
+.b-dim{background:#64748b22;color:var(--dim)}
+
+/* Portfolio Card */
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.port-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.port-card .ticker{font-size:1.3rem;margin-bottom:2px}
+.port-card .name{color:var(--muted);font-size:0.8rem;margin-bottom:8px}
+.port-card .metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.port-card .metric{text-align:center}
+.port-card .metric .m-val{font-size:0.95rem;font-weight:600}
+.port-card .metric .m-lbl{font-size:0.65rem;color:var(--muted);text-transform:uppercase}
+
+/* Breadth Chart */
+.chart-container{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:24px}
+
+/* Two-col layout */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:900px){.two-col{grid-template-columns:1fr}}
+
+/* Sub-industry table */
+.si-table{width:100%;border-collapse:collapse;font-size:0.82rem}
+.si-table th{background:var(--card2);color:var(--accent);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;padding:6px 8px;text-align:left;border-bottom:1px solid var(--border)}
+.si-table td{padding:5px 8px;border-bottom:1px solid #1e293b44}
+
+/* Regime History */
+.history-row{display:flex;align-items:center;gap:8px;padding:6px 10px;font-size:0.8rem;border-bottom:1px solid #1e293b33}
+.history-row .h-date{color:var(--dim);width:80px;font-family:monospace;font-size:0.75rem}
+.history-row .h-zone{width:85px}
+
+/* Signal summary boxes */
+.signal-box{border-radius:8px;padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.signal-box.t1-dip{background:linear-gradient(135deg,#10b98110,#10b98120);border:1px solid #10b98144}
+.signal-box.t1-mom{background:linear-gradient(135deg,#22d3ee10,#22d3ee20);border:1px solid #22d3ee44}
+.signal-box.t2{background:linear-gradient(135deg,#f59e0b10,#f59e0b20);border:1px solid #f59e0b44}
+.signal-box.t3{background:linear-gradient(135deg,#a855f710,#a855f720);border:1px solid #a855f744}
+
+/* Health interpretation */
+.health-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:900px){.health-grid{grid-template-columns:1fr 1fr}}
+.health-stat{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;text-align:center}
+.health-stat .hs-val{font-size:1.4rem;font-weight:700}
+.health-stat .hs-lbl{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px}
+.health-stat .hs-sub{font-size:0.75rem;color:var(--dim);margin-top:4px}
+.health-verdict{border-radius:10px;padding:16px 20px;margin-bottom:12px;display:flex;align-items:flex-start;gap:12px}
+.health-verdict.bullish{background:linear-gradient(135deg,#10b98112,#10b98120);border:1px solid #10b98144}
+.health-verdict.neutral{background:linear-gradient(135deg,#22d3ee12,#22d3ee20);border:1px solid #22d3ee44}
+.health-verdict.caution{background:linear-gradient(135deg,#f59e0b12,#f59e0b20);border:1px solid #f59e0b44}
+.health-verdict.danger{background:linear-gradient(135deg,#ef444412,#ef444420);border:1px solid #ef444444}
+.health-verdict .hv-icon{font-size:1.6rem;line-height:1}
+.health-verdict .hv-title{font-weight:700;font-size:1rem;margin-bottom:4px}
+.health-verdict .hv-body{font-size:0.85rem;color:var(--muted);line-height:1.5}
+.health-verdict .hv-body strong{color:var(--text)}
+.health-hist{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media(max-width:700px){.health-hist{grid-template-columns:1fr}}
+.health-hist-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.health-hist-card .hhc-title{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.health-hist-card .hhc-row{display:flex;justify-content:space-between;font-size:0.82rem;padding:2px 0}
+.health-hist-card .hhc-row .hhc-val{font-weight:600}
+.signal-left{flex:1}
+.signal-title{font-weight:700;font-size:0.95rem}
+.signal-desc{color:var(--muted);font-size:0.75rem;margin-top:2px}
+.signal-stats{text-align:right}
+.signal-wr{font-size:1.5rem;font-weight:700}
+.signal-count{font-size:0.75rem;color:var(--muted)}
+
+/* Footer */
+footer{text-align:center;color:var(--dim);font-size:0.75rem;padding:32px 0 16px;border-top:1px solid var(--border);margin-top:32px}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* Breadth Health Section */
+.breadth-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:900px){.breadth-grid{grid-template-columns:1fr 1fr}}
+.breadth-metric{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 16px;text-align:center}
+.breadth-metric .bm-val{font-size:1.4rem;font-weight:700}
+.breadth-metric .bm-lbl{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px}
+.breadth-metric .bm-sub{font-size:0.72rem;color:var(--dim);margin-top:3px}
+.breadth-chart-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:900px){.breadth-chart-row{grid-template-columns:1fr}}
+.breadth-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.breadth-card h4{font-size:0.8rem;color:var(--accent);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em}
+.breadth-regime-banner{border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.breadth-regime-banner.bull{background:linear-gradient(135deg,#10b98110,#10b98120);border:1px solid #10b98144}
+.breadth-regime-banner.caution{background:linear-gradient(135deg,#f59e0b10,#f59e0b20);border:1px solid #f59e0b44}
+.breadth-regime-banner.bear{background:linear-gradient(135deg,#ef444410,#ef444420);border:1px solid #ef444444}
+.breadth-regime-banner.recovery{background:linear-gradient(135deg,#22d3ee10,#22d3ee20);border:1px solid #22d3ee44}
+.breadth-regime-banner .br-label{font-size:0.7rem;text-transform:uppercase;color:var(--muted);letter-spacing:0.06em}
+.breadth-regime-banner .br-val{font-size:1.6rem;font-weight:700}
+.breadth-insight{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:10px;font-size:0.82rem;color:var(--muted);line-height:1.5}
+.breadth-insight strong{color:var(--text)}
+.breadth-insight.warning{border-left-color:var(--yellow)}
+.breadth-insight.danger{border-left-color:var(--red)}
+.breadth-insight.bullish{border-left-color:var(--green)}
+.breadth-event{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:0.8rem;border-bottom:1px solid #1e293b33}
+.breadth-event .be-date{color:var(--dim);width:80px;font-family:monospace;font-size:0.75rem}
+.breadth-event .be-type{font-weight:600;width:110px}
+.breadth-mini-table{width:100%;font-size:0.8rem;border-collapse:collapse}
+.breadth-mini-table th{background:var(--card2);color:var(--accent);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.04em;padding:6px 8px;text-align:left;border-bottom:1px solid var(--border)}
+.breadth-mini-table td{padding:5px 8px;border-bottom:1px solid #1e293b44}
+</style>
+</head>
+<body>
+<div class="c">
+
+<!-- HEADER -->
+<div class="header">
+ <h1><span class="live-dot"></span> Tech Screener Dashboard</h1>
+ <div class="header-right">
+ <span id="headerDate">—</span>
+ <span class="update-time" id="updateTime">—</span>
+ </div>
+</div>
+
+<!-- DATA FRESHNESS WARNING -->
+<div id="staleWarning" style="display:none;background:linear-gradient(135deg,#ef444415,#ef444425);border:2px solid #ef444455;border-radius:12px;padding:16px 20px;margin-bottom:20px;align-items:center;gap:12px">
+ <div style="font-size:1.5rem">&#9888;&#65039;</div>
+ <div>
+ <div style="font-weight:700;color:var(--red)">Stale Data Warning</div>
+ <div style="color:var(--muted);font-size:0.85rem" id="staleMsg">Data is outdated. Run daily_update.py to refresh.</div>
+ </div>
+</div>
+<!-- MARKET HEALTH INTERPRETATION -->
+<div class="section" id="healthSection">
+  <div class="section-title">Market Health Interpretation</div>
+  <div id="healthInterpretation">—</div>
+</div>
+
+<!-- REGIME BANNER -->
+<div id="regimeBanner" class="regime-banner strong-up">
+  <div class="regime-left">
+    <div>
+      <div class="regime-label">Current Regime</div>
+      <div class="regime-value" id="regimeValue">—</div>
+      <div class="regime-exposure" id="regimeExposure">—</div>
+    </div>
+  </div>
+  <div class="regime-metrics" id="regimeMetrics">—</div>
+</div>
+
+<!-- MARKET METRICS -->
+<div class="grid" id="metricsGrid">—</div>
+
+<!-- STRATEGY HISTORY CHARTS (added) -->
+    <div class="section">
+      <div class="section-title">Strategy Tier Evolution (Last 60 Days)</div>
+      <div class="chart-container">
+        <div style="width:100%; max-width:800px;">
+          <canvas id="strategyHistoryChart" height="200"></canvas>
+        </div>
+      </div>
+      <div class="breadth-chart-row" style="margin-top:12px">
+        <div class="breadth-card">
+          <h4>Tier Distribution (Last 30 Days)</h4>
+          <div style="width:100%; max-width:400px;">
+            <canvas id="tierPieChart" height="200"></canvas>
+          </div>
+        </div>
+        <div class="breadth-card">
+          <h4>Health Score Trend (Last 60 Days)</h4>
+          <div style="width:100%; max-width:400px;">
+            <canvas id="healthScoreChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px"></div>
+<!-- SIGNAL SUMMARY -->
+<div class="section">
+  <div class="section-title">Signal Summary</div>
+  <div id="signalSummary">—</div>
+</div>
+
+<!-- PORTFOLIO RECOMMENDATION -->
+<div class="section">
+  <div class="section-title">Portfolio Recommendation</div>
+  <div class="portfolio-grid" id="portfolioGrid">—</div>
+</div>
+
+<!-- THEME LEADERSHIP -->
+<div class="section">
+  <div class="section-title">Theme Leadership</div>
+  <div id="themeRanking">—</div>
+</div>
+
+<div class="two-col">
+  <!-- LEFT: Actionable Stocks -->
+  <div>
+    <div class="section">
+      <div class="section-title">T1_DIP — Dip-Buy in Leaders (94% WR)</div>
+      <div id="t1DipTable">—</div>
+    </div>
+    <div class="section">
+      <div class="section-title">T1_MOM — Leader Momentum (82% WR)</div>
+      <div id="t1MomTable">—</div>
+    </div>
+    <div class="section">
+      <div class="section-title">T2 — Pullback Momentum (76% WR)</div>
+      <div id="t2Table">—</div>
+    </div>
+    <div class="section">
+      <div class="section-title">T3 — Moderate / Defensive</div>
+      <div id="t3Table">—</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Breadth Chart + Sub-industry -->
+  <div>
+    <div class="section">
+      <div class="section-title">Breadth Trend (60d)</div>
+      <div class="chart-container">
+        <div style="width:100%; max-width:650px;"><canvas id="breadthChart" height="120"></canvas></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Sub-Industry Ranking</div>
+      <div id="subIndTable">—</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Regime History (Recent)</div>
+      <div id="regimeHistory" style="max-height:260px;overflow-y:auto">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- S&P 500 BREADTH HEALTH -->
+<div class="section" id="breadthSection">
+ <div class="section-title">S&P 500 Breadth Health</div>
+ <div id="breadthContent">—</div>
+</div>
+
+<footer>
+  S&P 500 Tech Sector Screener — Live Dashboard | Auto-updated daily via cron<br>
+  Strategy: RSI Dip-Buy + Leader Momentum in STRONG_UP regime | 85.7% WR (56 trades, 2015-2026)<br>
+  Past performance does not guarantee future results. Not financial advice.
+</footer>
+
+</div>
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4">
+// ─── Strategy History Charts ────────────────────────────────────────
+function renderStrategyHistoryChart(d) {
+  var el = document.getElementById('strategyHistoryChart');
+  if (!el || !d.strategy_history) return;
+  var h = d.strategy_history;
+  var colors = ['rgba(239,68,68,0.85)','rgba(234,179,8,0.85)','rgba(59,130,246,0.85)','rgba(16,185,129,0.85)'];
+  var labels = ['T1_DIP','T1_MOM','T2','T3'];
+  var datasets = [];
+  for (var i = 0; i < labels.length; i++) {
+    var key = labels[i].toLowerCase();
+    datasets.push({
+      label: labels[i],
+      data: h[key],
+      borderColor: colors[i],
+      backgroundColor: colors[i].replace('0.85','0.1'),
+      borderWidth: 2,
+      fill: false,
+      tension: 0.3,
+      pointRadius: h.dates.length > 40 ? 0 : 3,
+    });
+  }
+  new Chart(el.getContext('2d'), {
+    type: 'line',
+    data: { labels: h.dates, datasets: datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      interaction: { intersect: false, mode: 'index' },
+      plugins: {
+        legend: { labels: { color: '#94a3b8' } },
+        tooltip: { backgroundColor: '#1e293b', titleColor: '#e2e8f0', bodyColor: '#94a3b8', borderColor: '#334155', borderWidth: 1 },
+      },
+      scales: {
+        x: { ticks: { color: '#64748b', maxTicksLimit: 12, maxRotation: 45, font: { size: 10 } }, grid: { color: '#1e293b' } },
+        y: { beginAtZero: true, ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+      },
+    },
+  });
+}
+
+function renderTierPieChart(d) {
+  var el = document.getElementById('tierPieChart');
+  if (!el || !d.strategy_history) return;
+  var h = d.strategy_history;
+  var lastIdx = h.dates.length - 1;
+  var data = [
+    h.t1_dip[lastIdx] || 0,
+    h.t1_mom[lastIdx] || 0,
+    h.t2[lastIdx] || 0,
+    h.t3[lastIdx] || 0,
+  ];
+  var labels = ['T1_DIP\n(94% WR)', 'T1_MOM\n(82% WR)', 'T2\n(76% WR)', 'T3\n(~70% WR)'];
+  var colors = ['rgba(239,68,68,0.85)','rgba(234,179,8,0.85)','rgba(59,130,246,0.85)','rgba(16,185,129,0.85)'];
+  new Chart(el.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{ data: data, backgroundColor: colors, borderWidth: 0 }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 }, padding: 12 } },
+        tooltip: { backgroundColor: '#1e293b', titleColor: '#e2e8f0', bodyColor: '#94a3b8' },
+      },
+    },
+  });
+}
+
+function renderHealthScoreChart(d) {
+  var el = document.getElementById('healthScoreChart');
+  if (!el || !d.strategy_history) return;
+  var h = d.strategy_history;
+  var bgColors = h.regime.map(function(r) {
+    if (r === 'STRONG_UP' || r === 'UP') return 'rgba(16,185,129,0.15)';
+    return 'rgba(239,68,68,0.15)';
+  });
+  new Chart(el.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: h.dates,
+      datasets: [{
+        label: 'Breadth Composite Score',
+        data: h.breadth_composite,
+        borderColor: 'rgba(139,92,246,0.9)',
+        backgroundColor: bgColors,
+        borderWidth: 2,
+        fill: true,
+        tension: 0.3,
+        pointRadius: h.dates.length > 40 ? 0 : 3,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      interaction: { intersect: false, mode: 'index' },
+      plugins: {
+        legend: { labels: { color: '#94a3b8' } },
+        tooltip: { backgroundColor: '#1e293b', titleColor: '#e2e8f0', bodyColor: '#94a3b8' },
+      },
+      scales: {
+        x: { ticks: { color: '#64748b', maxTicksLimit: 12, maxRotation: 45, font: { size: 10 } }, grid: { color: '#1e293b' } },
+        y: { min: 0, max: 1, ticks: { color: '#64748b', callback: function(v) { return Math.round(v*100) + '%'; } }, grid: { color: '#1e293b' } },
+      },
+    },
+  });
+}
+
+</script>
+
+<script>
+// ===== EMBEDDED DATA — auto-replaced by generate_dashboard.py =====
+const DASHBOARD_DATA = /*__DASHBOARD_DATA__*/{"generated_at": "2026-06-25T19:48:24.467822", "date": "2026-06-24", "data_freshness": {"is_stale": false, "days_behind": 1, "today": "2026-06-25"}, "market_status": {"regime": "UP", "regime_display": "UP", "breadth": 56.0, "vix": 18.6, "spy_price": 733.24, "spy_sma50": 732.74, "spy_sma200": 687.62, "spy_trend": "Bullish", "exposure": 0.5, "exposure_pct": 50}, "theme_leadership": {"leader": "Hardware", "runner": "Semiconductors", "theme_ranking": [{"theme": "Hardware", "ret_21d": 7.0, "is_leader": true, "is_runner": false, "n_qualifying": 14, "n_total": 26}, {"theme": "Semiconductors", "ret_21d": 1.8, "is_leader": false, "is_runner": true, "n_qualifying": 0, "n_total": 20}, {"theme": "Software", "ret_21d": -8.8, "is_leader": false, "is_runner": false, "n_qualifying": 0, "n_total": 21}, {"theme": "IT Services", "ret_21d": -14.5, "is_leader": false, "is_runner": false, "n_qualifying": 0, "n_total": 5}, {"theme": "Internet", "ret_21d": -15.6, "is_leader": false, "is_runner": false, "n_qualifying": 0, "n_total": 3}]}, "sub_industry_ranking": [{"sub_ind": "Technology Hardware, Storage & Peripherals", "theme": "Hardware", "avg_ret_21d": 14.2, "n_qualifying": 6, "n_total": 9, "is_leader_theme": true}, {"sub_ind": "Electronic Components", "theme": "Hardware", "avg_ret_21d": 10.3, "n_qualifying": 3, "n_total": 3, "is_leader_theme": true}, {"sub_ind": "Electronic Manufacturing Services", "theme": "Hardware", "avg_ret_21d": 4.3, "n_qualifying": 2, "n_total": 3, "is_leader_theme": true}, {"sub_ind": "Semiconductors", "theme": "Semiconductors", "avg_ret_21d": 1.3, "n_qualifying": 0, "n_total": 15, "is_leader_theme": false}, {"sub_ind": "Consumer Electronics", "theme": "Hardware", "avg_ret_21d": -0.3, "n_qualifying": 0, "n_total": 1, "is_leader_theme": true}, {"sub_ind": "Electronic Equipment & Instruments", "theme": "Hardware", "avg_ret_21d": -0.4, "n_qualifying": 1, "n_total": 4, "is_leader_theme": true}, {"sub_ind": "Systems Software", "theme": "Software", "avg_ret_21d": -1.5, "n_qualifying": 0, "n_total": 6, "is_leader_theme": false}, {"sub_ind": "Communications Equipment", "theme": "Hardware", "avg_ret_21d": -5.6, "n_qualifying": 2, "n_total": 6, "is_leader_theme": true}, {"sub_ind": "Data Processing & Outsourced Services", "theme": "IT Services", "avg_ret_21d": -7.2, "n_qualifying": 0, "n_total": 1, "is_leader_theme": false}, {"sub_ind": "Application Software", "theme": "Software", "avg_ret_21d": -13.3, "n_qualifying": 0, "n_total": 15, "is_leader_theme": false}, {"sub_ind": "Internet Services & Infrastructure", "theme": "Internet", "avg_ret_21d": -17.4, "n_qualifying": 0, "n_total": 3, "is_leader_theme": false}, {"sub_ind": "IT Consulting & Other Services", "theme": "IT Services", "avg_ret_21d": -18.4, "n_qualifying": 0, "n_total": 4, "is_leader_theme": false}, {"sub_ind": "Semiconductor Materials & Equipment", "theme": "Semiconductors", "avg_ret_21d": -27.2, "n_qualifying": 0, "n_total": 5, "is_leader_theme": false}], "leader_stocks": [{"ticker": "DELL", "name": "Dell Technologies", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 434.05999755859375, "rsi": 68.6, "vol63": 0.885, "ret_21d": 38.6, "ret_5d": 7.2, "ret_63d": 90.1, "dd_from_63d_high": -6.8, "atr_pct": 7.1, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "WDC", "name": "Western Digital", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 643.8300170898438, "rsi": 58.9, "vol63": 0.754, "ret_21d": 28.5, "ret_5d": -5.6, "ret_63d": 76.0, "dd_from_63d_high": -13.7, "atr_pct": 9.0, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "HPE", "name": "Hewlett Packard Enterprise", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 48.75, "rsi": 62.6, "vol63": 0.681, "ret_21d": 26.0, "ret_5d": 0.8, "ret_63d": 71.3, "dd_from_63d_high": -13.2, "atr_pct": 6.1, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "SNDK", "name": "Sandisk", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 1914.4599609375, "rsi": 55.8, "vol63": 1.015, "ret_21d": 25.8, "ret_5d": -3.9, "ret_63d": 100.3, "dd_from_63d_high": -15.8, "atr_pct": 10.0, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "APH", "name": "Amphenol", "theme": "Hardware", "sub_ind": "Electronic Components", "price": 162.77999877929688, "rsi": 63.1, "vol63": 0.476, "ret_21d": 20.9, "ret_5d": 2.6, "ret_63d": 24.1, "dd_from_63d_high": -1.8, "atr_pct": 4.2, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "STX", "name": "Seagate Technology", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 993.25, "rsi": 59.7, "vol63": 0.658, "ret_21d": 20.1, "ret_5d": -3.7, "ret_63d": 85.1, "dd_from_63d_high": -9.1, "atr_pct": 7.7, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "FLEX", "name": "Flex Ltd.", "theme": "Hardware", "sub_ind": "Electronic Manufacturing Services", "price": 150.72000122070312, "rsi": 57.1, "vol63": 0.872, "ret_21d": 12.9, "ret_5d": 2.5, "ret_63d": 78.0, "dd_from_63d_high": -6.9, "atr_pct": 6.6, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "NTAP", "name": "NetApp", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 155.55999755859375, "rsi": 54.0, "vol63": 0.576, "ret_21d": 11.0, "ret_5d": -3.6, "ret_63d": 40.5, "dd_from_63d_high": -14.1, "atr_pct": 4.6, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "GLW", "name": "Corning Inc.", "theme": "Hardware", "sub_ind": "Electronic Components", "price": 205.8300018310547, "rsi": 57.9, "vol63": 0.831, "ret_21d": 6.0, "ret_5d": 14.9, "ret_63d": 37.3, "dd_from_63d_high": -1.9, "atr_pct": 7.9, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "ANET", "name": "Arista Networks", "theme": "Hardware", "sub_ind": "Communications Equipment", "price": 161.74000549316406, "rsi": 50.9, "vol63": 0.632, "ret_21d": 4.9, "ret_5d": -3.8, "ret_63d": 21.2, "dd_from_63d_high": -9.0, "atr_pct": 5.6, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "COHR", "name": "Coherent Corp.", "theme": "Hardware", "sub_ind": "Electronic Components", "price": 392.5, "rsi": 52.5, "vol63": 0.907, "ret_21d": 3.9, "ret_5d": 2.5, "ret_63d": 36.6, "dd_from_63d_high": -8.1, "atr_pct": 10.3, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "JBL", "name": "Jabil", "theme": "Hardware", "sub_ind": "Electronic Manufacturing Services", "price": 371.79998779296875, "rsi": 53.8, "vol63": 0.486, "ret_21d": 2.0, "ret_5d": -1.0, "ret_63d": 29.3, "dd_from_63d_high": -3.6, "atr_pct": 6.1, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "KEYS", "name": "Keysight Technologies", "theme": "Hardware", "sub_ind": "Electronic Equipment & Instruments", "price": 351.29998779296875, "rsi": 52.1, "vol63": 0.388, "ret_21d": 1.4, "ret_5d": 0.3, "ret_63d": 16.3, "dd_from_63d_high": -5.9, "atr_pct": 4.1, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "SKIP", "signal": ""}, {"ticker": "ROP", "name": "Roper Technologies", "theme": "Hardware", "sub_ind": "Electronic Equipment & Instruments", "price": 331.6000061035156, "rsi": 48.7, "vol63": 0.257, "ret_21d": 1.4, "ret_5d": -1.7, "ret_63d": -4.0, "dd_from_63d_high": -9.1, "atr_pct": 2.6, "above_50d": false, "above_200d": false, "is_leader": true, "is_mag7": false, "tier": "SKIP", "signal": ""}, {"ticker": "GRMN", "name": "Garmin", "theme": "Hardware", "sub_ind": "Consumer Electronics", "price": 240.02000427246094, "rsi": 53.3, "vol63": 0.295, "ret_21d": -0.3, "ret_5d": 2.1, "ret_63d": -0.5, "dd_from_63d_high": -10.3, "atr_pct": 2.7, "above_50d": false, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "SKIP", "signal": ""}, {"ticker": "CSCO", "name": "Cisco", "theme": "Hardware", "sub_ind": "Communications Equipment", "price": 119.7300033569336, "rsi": 55.1, "vol63": 0.412, "ret_21d": -0.6, "ret_5d": 0.1, "ret_63d": 39.8, "dd_from_63d_high": -7.9, "atr_pct": 3.5, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "MSI", "name": "Motorola Solutions", "theme": "Hardware", "sub_ind": "Communications Equipment", "price": 400.6000061035156, "rsi": 45.2, "vol63": 0.325, "ret_21d": -0.9, "ret_5d": -0.8, "ret_63d": -12.7, "dd_from_63d_high": -11.2, "atr_pct": 2.3, "above_50d": false, "above_200d": false, "is_leader": true, "is_mag7": false, "tier": "SKIP", "signal": ""}, {"ticker": "TDY", "name": "Teledyne Technologies", "theme": "Hardware", "sub_ind": "Electronic Equipment & Instruments", "price": 612.1699829101562, "rsi": 46.1, "vol63": 0.281, "ret_21d": -1.3, "ret_5d": -2.9, "ret_63d": -2.2, "dd_from_63d_high": -7.3, "atr_pct": 2.7, "above_50d": false, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "SKIP", "signal": ""}, {"ticker": "TEL", "name": "TE Connectivity", "theme": "Hardware", "sub_ind": "Electronic Manufacturing Services", "price": 198.5500030517578, "rsi": 40.7, "vol63": 0.42, "ret_21d": -2.1, "ret_5d": -8.9, "ret_63d": -3.5, "dd_from_63d_high": -19.5, "atr_pct": 4.5, "above_50d": false, "above_200d": false, "is_leader": true, "is_mag7": false, "tier": "SKIP", "signal": ""}, {"ticker": "FFIV", "name": "F5, Inc.", "theme": "Hardware", "sub_ind": "Communications Equipment", "price": 384.7799987792969, "rsi": 51.9, "vol63": 0.335, "ret_21d": -2.3, "ret_5d": -1.1, "ret_63d": 28.6, "dd_from_63d_high": -6.0, "atr_pct": 3.3, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "SKIP", "signal": ""}], "actionable_stocks": {"T1_DIP": {"description": "Dip-Buy in Leader Theme (RSI 30-55)", "wr": 94.1, "avg_return": 6.8, "stocks": []}, "T1_MOM": {"description": "Leader Momentum (RSI 55+)", "wr": 82.1, "avg_return": 5.2, "stocks": []}, "T2": {"description": "Pullback Momentum (Non-Leader, RSI 30-55)", "wr": 75.7, "avg_return": 5.8, "stocks": []}, "T3": {"description": "Moderate Conviction (UP regime / MAG7)", "wr": 70.0, "avg_return": 3.5, "stocks": [{"ticker": "DELL", "name": "Dell Technologies", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 434.05999755859375, "rsi": 68.6, "vol63": 0.885, "ret_21d": 38.6, "ret_5d": 7.2, "ret_63d": 90.1, "dd_from_63d_high": -6.8, "atr_pct": 7.1, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "WDC", "name": "Western Digital", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 643.8300170898438, "rsi": 58.9, "vol63": 0.754, "ret_21d": 28.5, "ret_5d": -5.6, "ret_63d": 76.0, "dd_from_63d_high": -13.7, "atr_pct": 9.0, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "HPE", "name": "Hewlett Packard Enterprise", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 48.75, "rsi": 62.6, "vol63": 0.681, "ret_21d": 26.0, "ret_5d": 0.8, "ret_63d": 71.3, "dd_from_63d_high": -13.2, "atr_pct": 6.1, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "SNDK", "name": "Sandisk", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 1914.4599609375, "rsi": 55.8, "vol63": 1.015, "ret_21d": 25.8, "ret_5d": -3.9, "ret_63d": 100.3, "dd_from_63d_high": -15.8, "atr_pct": 10.0, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "APH", "name": "Amphenol", "theme": "Hardware", "sub_ind": "Electronic Components", "price": 162.77999877929688, "rsi": 63.1, "vol63": 0.476, "ret_21d": 20.9, "ret_5d": 2.6, "ret_63d": 24.1, "dd_from_63d_high": -1.8, "atr_pct": 4.2, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "STX", "name": "Seagate Technology", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 993.25, "rsi": 59.7, "vol63": 0.658, "ret_21d": 20.1, "ret_5d": -3.7, "ret_63d": 85.1, "dd_from_63d_high": -9.1, "atr_pct": 7.7, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "FLEX", "name": "Flex Ltd.", "theme": "Hardware", "sub_ind": "Electronic Manufacturing Services", "price": 150.72000122070312, "rsi": 57.1, "vol63": 0.872, "ret_21d": 12.9, "ret_5d": 2.5, "ret_63d": 78.0, "dd_from_63d_high": -6.9, "atr_pct": 6.6, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "NTAP", "name": "NetApp", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 155.55999755859375, "rsi": 54.0, "vol63": 0.576, "ret_21d": 11.0, "ret_5d": -3.6, "ret_63d": 40.5, "dd_from_63d_high": -14.1, "atr_pct": 4.6, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "GLW", "name": "Corning Inc.", "theme": "Hardware", "sub_ind": "Electronic Components", "price": 205.8300018310547, "rsi": 57.9, "vol63": 0.831, "ret_21d": 6.0, "ret_5d": 14.9, "ret_63d": 37.3, "dd_from_63d_high": -1.9, "atr_pct": 7.9, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}, {"ticker": "ANET", "name": "Arista Networks", "theme": "Hardware", "sub_ind": "Communications Equipment", "price": 161.74000549316406, "rsi": 50.9, "vol63": 0.632, "ret_21d": 4.9, "ret_5d": -3.8, "ret_63d": 21.2, "dd_from_63d_high": -9.0, "atr_pct": 5.6, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR"}]}}, "portfolio_recommendation": [{"ticker": "DELL", "name": "Dell Technologies", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 434.05999755859375, "rsi": 68.6, "vol63": 0.885, "ret_21d": 38.6, "ret_5d": 7.2, "ret_63d": 90.1, "dd_from_63d_high": -6.8, "atr_pct": 7.1, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR", "portfolio_tier": "T3", "weight": "low"}, {"ticker": "WDC", "name": "Western Digital", "theme": "Hardware", "sub_ind": "Technology Hardware, Storage & Peripherals", "price": 643.8300170898438, "rsi": 58.9, "vol63": 0.754, "ret_21d": 28.5, "ret_5d": -5.6, "ret_63d": 76.0, "dd_from_63d_high": -13.7, "atr_pct": 9.0, "above_50d": true, "above_200d": true, "is_leader": true, "is_mag7": false, "tier": "T3", "signal": "MODERATE \u2014 ~70% WR", "portfolio_tier": "T3", "weight": "low"}], "breadth_history": {"dates": ["2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-22", "2026-06-23", "2026-06-24"], "values": [17.333333333333336, 26.666666666666668, 34.66666666666667, 41.333333333333336, 42.66666666666667, 44.0, 53.333333333333336, 52.0, 48.0, 54.666666666666664, 60.0, 66.66666666666666, 72.0, 77.33333333333333, 78.66666666666666, 80.0, 84.0, 69.33333333333334, 74.66666666666667, 69.33333333333334, 68.0, 68.0, 73.33333333333333, 73.33333333333333, 77.33333333333333, 76.0, 74.66666666666667, 77.33333333333333, 76.0, 69.33333333333334, 70.66666666666667, 69.33333333333334, 72.0, 72.0, 77.33333333333333, 77.33333333333333, 78.66666666666666, 78.66666666666666, 80.0, 78.66666666666666, 78.66666666666666, 81.33333333333333, 84.0, 90.66666666666666, 86.66666666666667, 82.66666666666667, 82.66666666666667, 73.33333333333333, 74.66666666666667, 66.66666666666666, 57.333333333333336, 60.0, 62.66666666666667, 68.0, 61.33333333333333, 54.666666666666664, 57.333333333333336, 56.00000000000001, 56.00000000000001, 56.00000000000001]}, "recent_regime_history": [{"date": "2025-08-19", "zone": "UP", "exposure": 0.5, "leader": "Hardware", "breadth": 54.8, "n_stocks": 2}, {"date": "2025-09-03", "zone": "UP", "exposure": 0.5, "leader": "Hardware", "breadth": 52.1, "n_stocks": 2}, {"date": "2025-09-17", "zone": "UP", "exposure": 0.5, "leader": "Hardware", "breadth": 61.6, "n_stocks": 1}, {"date": "2025-10-01", "zone": "UP", "exposure": 0.5, "leader": "Hardware", "breadth": 63.0, "n_stocks": 3}, {"date": "2025-10-15", "zone": "UP", "exposure": 0.5, "leader": "Semiconductors", "breadth": 61.6, "n_stocks": 4}, {"date": "2025-10-29", "zone": "UP", "exposure": 0.5, "leader": "Semiconductors", "breadth": 60.3, "n_stocks": 4}, {"date": "2025-11-12", "zone": "WEAK", "exposure": 0.15, "leader": "Semiconductors", "breadth": 49.3, "n_stocks": 3}, {"date": "2025-11-26", "zone": "WEAK", "exposure": 0.15, "leader": "Internet", "breadth": 34.2, "n_stocks": 3}, {"date": "2025-12-11", "zone": "UP", "exposure": 0.5, "leader": "Semiconductors", "breadth": 64.4, "n_stocks": 3}, {"date": "2025-12-26", "zone": "UP", "exposure": 0.5, "leader": "Semiconductors", "breadth": 60.3, "n_stocks": 2}, {"date": "2026-01-12", "zone": "UP", "exposure": 0.5, "leader": "Semiconductors", "breadth": 56.2, "n_stocks": 3}, {"date": "2026-01-27", "zone": "UP", "exposure": 0.5, "leader": "Semiconductors", "breadth": 53.4, "n_stocks": 5}, {"date": "2026-02-10", "zone": "UP", "exposure": 0.5, "leader": "Hardware", "breadth": 50.7, "n_stocks": 7}, {"date": "2026-02-25", "zone": "WEAK", "exposure": 0.15, "leader": "Hardware", "breadth": 46.6, "n_stocks": 2}, {"date": "2026-03-11", "zone": "WEAK", "exposure": 0.15, "leader": "Internet", "breadth": 41.1, "n_stocks": 2}, {"date": "2026-03-25", "zone": "WEAK", "exposure": 0.15, "leader": "Internet", "breadth": 39.7, "n_stocks": 1}, {"date": "2026-04-09", "zone": "UP", "exposure": 0.5, "leader": "Hardware", "breadth": 50.7, "n_stocks": 2}, {"date": "2026-04-23", "zone": "UP", "exposure": 0.5, "leader": "Semiconductors", "breadth": 68.5, "n_stocks": 5}, {"date": "2026-05-07", "zone": "STRONG_UP", "exposure": 1.0, "leader": "Semiconductors", "breadth": 76.7, "n_stocks": 5}, {"date": "2026-05-21", "zone": "STRONG_UP", "exposure": 1.0, "leader": "Internet", "breadth": 78.1, "n_stocks": 3}], "sp500_breadth": {"current": {"advance_pct": 0.6414342629482072, "pct_above_sma21": 0.5418326693227091, "pct_above_sma200": 0.5856573705179283, "pct_trending": 0.26294820717131473, "pct_vol_high": 0.7689243027888446, "pct_macd_bull": 0.5219123505976095, "avg_rsi": 52.3721756133166, "pct_rsi_ob": 0.037848605577689244, "pct_rsi_os": 0.0398406374501992, "new_highs_pct": 0.14342629482071714, "new_lows_pct": 0.09163346613545817, "pct_strong_mom": 0.1394422310756972, "pct_weak_mom": 0.1294820717131474, "breadth_composite": 0.515553520129952, "breadth_regime": "Recovery", "adv_dec_ratio": 1.7988826815642458, "adv_dec_line": 71396.0, "is_capitulation": 0, "is_euphoria": 0, "is_bearish_divergence": 0, "is_bullish_confirmation": 1}, "history_120d": {"dates": ["2025-12-31", "2026-01-02", "2026-01-05", "2026-01-06", "2026-01-07", "2026-01-08", "2026-01-09", "2026-01-12", "2026-01-13", "2026-01-14", "2026-01-15", "2026-01-16", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-26", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-02-02", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-09", "2026-02-10", "2026-02-11", "2026-02-12", "2026-02-13", "2026-02-17", "2026-02-18", "2026-02-19", "2026-02-20", "2026-02-23", "2026-02-24", "2026-02-25", "2026-02-26", "2026-02-27", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-05", "2026-03-06", "2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13", "2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-06", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-20", "2026-04-21", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-04", "2026-05-05", "2026-05-06", "2026-05-07", "2026-05-08", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-06-01", "2026-06-02", "2026-06-03", "2026-06-04", "2026-06-05", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-11", "2026-06-12", "2026-06-15", "2026-06-16", "2026-06-17", "2026-06-18", "2026-06-22", "2026-06-23", "2026-06-24"], "advance_pct": [0.03373015873015873, 0.6567460317460317, 0.6706349206349206, 0.753968253968254, 0.2261904761904762, 0.6984126984126984, 0.5714285714285714, 0.5, 0.5277777777777778, 0.623015873015873, 0.625, 0.4603174603174603, 0.19642857142857142, 0.8194444444444444, 0.5615079365079365, 0.3630952380952381, 0.6309523809523809, 0.4742063492063492, 0.38293650793650796, 0.5674603174603174, 0.4861111111111111, 0.5853174603174603, 0.5456349206349206, 0.7142857142857143, 0.3630952380952381, 0.8035714285714286, 0.5297619047619048, 0.5952380952380952, 0.5694444444444444, 0.31746031746031744, 0.7321428571428571, 0.49007936507936506, 0.626984126984127, 0.4087301587301587, 0.6706349206349206, 0.3492063492063492, 0.7142857142857143, 0.5198412698412699, 0.6865079365079365, 0.5555555555555556, 0.48412698412698413, 0.2619047619047619, 0.5654761904761905, 0.2638888888888889, 0.2916666666666667, 0.5099206349206349, 0.3055555555555556, 0.3392857142857143, 0.21626984126984128, 0.5257936507936508, 0.7678571428571429, 0.6309523809523809, 0.15674603174603174, 0.4305555555555556, 0.22023809523809523, 0.7638888888888888, 0.5714285714285714, 0.6428571428571429, 0.36706349206349204, 0.2222222222222222, 0.5436507936507936, 0.8392857142857143, 0.6031746031746031, 0.6011904761904762, 0.6428571428571429, 0.4107142857142857, 0.8412698412698413, 0.5833333333333334, 0.2757936507936508, 0.7123015873015873, 0.5734126984126984, 0.44642857142857145, 0.5972222222222222, 0.7876984126984127, 0.5496031746031746, 0.32936507936507936, 0.4365079365079365, 0.5416666666666666, 0.3551587301587302, 0.44841269841269843, 0.4583333333333333, 0.3353174603174603, 0.751984126984127, 0.35119047619047616, 0.3055555555555556, 0.6408730158730159, 0.6369047619047619, 0.35119047619047616, 0.41865079365079366, 0.4305555555555556, 0.5158730158730159, 0.35119047619047616, 0.5972222222222222, 0.2777777777777778, 0.7103174603174603, 0.36706349206349204, 0.6944444444444444, 0.5714285714285714, 0.7063492063492064, 0.498015873015873, 0.46732673267326735, 0.4772277227722772, 0.3920792079207921, 0.42178217821782177, 0.5148514851485149, 0.4, 0.7207920792079208, 0.4772277227722772, 0.3603960396039604, 0.7346534653465346, 0.32270916334661354, 0.6374501992031872, 0.7888446215139442, 0.5159362549800797, 0.5418326693227091, 0.1454183266932271, 0.5258964143426295, 0.5338645418326693, 0.5688622754491018, 0.6414342629482072], "pct_above_sma21": [0.6329365079365079, 0.6170634920634921, 0.626984126984127, 0.6468253968253969, 0.6091269841269841, 0.6349206349206349, 0.6587301587301587, 0.6825396825396826, 0.6746031746031746, 0.6845238095238095, 0.6904761904761905, 0.6805555555555556, 0.6547619047619048, 0.6547619047619048, 0.6369047619047619, 0.6091269841269841, 0.5833333333333334, 0.6051587301587301, 0.5853174603174603, 0.5674603174603174, 0.5476190476190477, 0.5595238095238095, 0.5416666666666666, 0.5714285714285714, 0.5892857142857143, 0.6071428571428571, 0.625, 0.6349206349206349, 0.6408730158730159, 0.6666666666666666, 0.6607142857142857, 0.6527777777777778, 0.6428571428571429, 0.6170634920634921, 0.6369047619047619, 0.6111111111111112, 0.6091269841269841, 0.5892857142857143, 0.5853174603174603, 0.5972222222222222, 0.6091269841269841, 0.5734126984126984, 0.5496031746031746, 0.5158730158730159, 0.4662698412698413, 0.40476190476190477, 0.36904761904761907, 0.32936507936507936, 0.2857142857142857, 0.2698412698412698, 0.23214285714285715, 0.2361111111111111, 0.21031746031746032, 0.21626984126984128, 0.19047619047619047, 0.16666666666666666, 0.15674603174603174, 0.16071428571428573, 0.16666666666666666, 0.19246031746031747, 0.18055555555555555, 0.2123015873015873, 0.2619047619047619, 0.32936507936507936, 0.4444444444444444, 0.5416666666666666, 0.6170634920634921, 0.6984126984126984, 0.7103174603174603, 0.7202380952380952, 0.751984126984127, 0.75, 0.7559523809523809, 0.7698412698412699, 0.7738095238095238, 0.751984126984127, 0.75, 0.7261904761904762, 0.7003968253968254, 0.6468253968253969, 0.5972222222222222, 0.5734126984126984, 0.5734126984126984, 0.5615079365079365, 0.5515873015873016, 0.5198412698412699, 0.5337301587301587, 0.5059523809523809, 0.4662698412698413, 0.4603174603174603, 0.4503968253968254, 0.42658730158730157, 0.4305555555555556, 0.4146825396825397, 0.4146825396825397, 0.4166666666666667, 0.4246031746031746, 0.4305555555555556, 0.49404761904761907, 0.5436507936507936, 0.5782178217821782, 0.5881188118811881, 0.598019801980198, 0.5722772277227722, 0.5425742574257426, 0.5108910891089109, 0.5267326732673268, 0.5445544554455446, 0.5683168316831683, 0.6039603960396039, 0.6115537848605578, 0.6155378486055777, 0.6294820717131474, 0.649402390438247, 0.6593625498007968, 0.6613545816733067, 0.6434262948207171, 0.5816733067729084, 0.5469061876247505, 0.5418326693227091], "pct_above_sma200": [0.6091269841269841, 0.6111111111111112, 0.6111111111111112, 0.6111111111111112, 0.6111111111111112, 0.6071428571428571, 0.6051587301587301, 0.6071428571428571, 0.6071428571428571, 0.6071428571428571, 0.6071428571428571, 0.6091269841269841, 0.6130952380952381, 0.6170634920634921, 0.6111111111111112, 0.6150793650793651, 0.6130952380952381, 0.6111111111111112, 0.6111111111111112, 0.6130952380952381, 0.6150793650793651, 0.6190476190476191, 0.6170634920634921, 0.6190476190476191, 0.6190476190476191, 0.623015873015873, 0.628968253968254, 0.6309523809523809, 0.628968253968254, 0.6329365079365079, 0.6349206349206349, 0.6448412698412699, 0.6488095238095238, 0.6527777777777778, 0.6587301587301587, 0.6666666666666666, 0.6646825396825397, 0.6646825396825397, 0.6646825396825397, 0.6626984126984127, 0.6746031746031746, 0.6726190476190477, 0.6785714285714286, 0.6825396825396826, 0.6825396825396826, 0.6825396825396826, 0.6884920634920635, 0.6865079365079365, 0.6845238095238095, 0.6785714285714286, 0.6765873015873016, 0.6726190476190477, 0.6726190476190477, 0.6686507936507936, 0.6587301587301587, 0.6547619047619048, 0.6527777777777778, 0.6448412698412699, 0.6388888888888888, 0.6349206349206349, 0.625, 0.6130952380952381, 0.6071428571428571, 0.6051587301587301, 0.6031746031746031, 0.5932539682539683, 0.5912698412698413, 0.5892857142857143, 0.5833333333333334, 0.5813492063492064, 0.5813492063492064, 0.5734126984126984, 0.5694444444444444, 0.5674603174603174, 0.5694444444444444, 0.5694444444444444, 0.5714285714285714, 0.5694444444444444, 0.5654761904761905, 0.5634920634920635, 0.5595238095238095, 0.5555555555555556, 0.5535714285714286, 0.5535714285714286, 0.5476190476190477, 0.5515873015873016, 0.5496031746031746, 0.5515873015873016, 0.5496031746031746, 0.5476190476190477, 0.5436507936507936, 0.5357142857142857, 0.5357142857142857, 0.5337301587301587, 0.5357142857142857, 0.5357142857142857, 0.5357142857142857, 0.5337301587301587, 0.5357142857142857, 0.5357142857142857, 0.5386138613861386, 0.5405940594059406, 0.5405940594059406, 0.5465346534653466, 0.5544554455445545, 0.5584158415841585, 0.5603960396039604, 0.5643564356435643, 0.5742574257425742, 0.5762376237623762, 0.5776892430278885, 0.5816733067729084, 0.5776892430278885, 0.5836653386454184, 0.5856573705179283, 0.5856573705179283, 0.5816733067729084, 0.5816733067729084, 0.5788423153692615, 0.5856573705179283], "avg_rsi": [50.13793325579452, 51.93985330458576, 54.06722866898852, 56.823150704302215, 52.798929486206546, 55.45391421463699, 56.111784958117774, 55.82608620619897, 55.385552500375745, 56.28694674067708, 57.201114570689086, 56.047153984346785, 51.27391982379958, 54.75643714697149, 54.80906130146886, 53.487708161701775, 54.16546810103727, 53.576932039781596, 51.985434948055186, 52.431245263331476, 52.08327716343088, 52.80082481051058, 52.48459252920944, 54.645447182271276, 52.85254427090547, 56.18813445567733, 55.703305698012876, 56.44678609200476, 56.31297125314042, 53.161801133845636, 54.91596581708039, 54.216101582165706, 54.70664547113848, 53.80674292504042, 54.6913967764453, 52.436526319672765, 53.88976733003496, 53.587195271336334, 54.903824061520474, 55.05127417933339, 54.40964424474323, 51.55893026307921, 52.004034523175044, 49.21952552283621, 47.054628094147844, 47.29837064328754, 45.50997762405457, 44.66044006355923, 42.24648002639259, 42.544379211381575, 44.524778204305115, 45.639915188998366, 42.559111776649324, 42.53118829968571, 39.82485606110594, 42.82630551465164, 43.46585542518809, 44.736783490089955, 43.49802953000034, 41.068421227686756, 41.798760617913295, 46.689720975820485, 47.28028090204801, 48.26194849148724, 49.27279096956546, 48.588513162580014, 53.69208809929124, 53.83875623501156, 51.643850957323664, 53.71719162067522, 54.34287613472748, 53.78884039782035, 54.44316292506998, 56.9160420933066, 56.91876725875913, 54.66004363404639, 53.92527646854683, 54.05754333924751, 52.7509629291083, 52.16365733892718, 51.47169723610991, 50.456268714811735, 53.4554418341633, 52.317127371367874, 50.4986077386583, 51.64735215602189, 52.682183316851614, 51.08602473419802, 50.55819905022117, 49.92015402286111, 50.271826064213286, 49.001319844303985, 49.822216391422565, 47.57700825842089, 50.03662583392209, 49.01992220256492, 51.086585242052564, 51.59150451625244, 53.06691419156177, 53.01798780521628, 52.66818870743037, 52.645885459268264, 51.675132383094486, 50.881462619906856, 51.17019641921259, 50.17124787276713, 52.66212807229605, 51.81488481170921, 50.42109489810497, 53.10900615815883, 50.569384837478864, 52.646809342732546, 54.279275111870234, 54.028335869895116, 54.17284804556762, 50.08421665317653, 50.21124383310445, 50.36663357708474, 50.82129764881909, 52.3721756133166], "adv_dec_ratio": [0.03497942386831276, 1.9132947976878614, 2.0484848484848484, 3.04, 0.2915601023017903, 2.3006535947712417, 1.3395348837209302, 1.0, 1.112970711297071, 1.6526315789473685, 1.6666666666666667, 0.8498168498168498, 0.24504950495049505, 4.489130434782608, 1.2922374429223744, 0.5700934579439252, 1.7005347593582887, 0.8984962406015038, 0.6185897435897436, 1.330232558139535, 0.9459459459459459, 1.4047619047619047, 1.2008733624454149, 2.4827586206896552, 0.5700934579439252, 4.05, 1.13135593220339, 1.477832512315271, 1.31651376146789, 0.463768115942029, 2.713235294117647, 0.9610894941634242, 1.6808510638297873, 0.6983050847457627, 2.0239520958083834, 0.5382262996941896, 2.5174825174825175, 1.0826446280991735, 2.217948717948718, 1.2444444444444445, 0.9420849420849421, 0.3548387096774194, 1.3013698630136987, 0.3584905660377358, 0.4117647058823529, 1.0362903225806452, 0.43874643874643876, 0.5166163141993958, 0.2759493670886076, 1.1181434599156117, 3.3076923076923075, 1.7377049180327868, 0.18544600938967137, 0.7534722222222222, 0.2817258883248731, 3.235294117647059, 1.327188940092166, 1.8, 0.5799373040752351, 0.28717948717948716, 1.1965065502183405, 5.222222222222222, 1.5276381909547738, 1.515, 1.8202247191011236, 0.696969696969697, 5.234567901234568, 1.4, 0.38082191780821917, 2.475862068965517, 1.3632075471698113, 0.8093525179856115, 1.4827586206896552, 3.7452830188679247, 1.2256637168141593, 0.4896755162241888, 0.7746478873239436, 1.1818181818181819, 0.5524691358024691, 0.8158844765342961, 0.8461538461538461, 0.5044776119402985, 3.1322314049586777, 0.5429447852760736, 0.4425287356321839, 1.7747252747252746, 1.7540983606557377, 0.5396341463414634, 0.717687074829932, 0.7534722222222222, 1.0655737704918034, 0.5429447852760736, 1.4827586206896552, 0.3856749311294766, 2.4689655172413794, 0.5799373040752351, 2.287581699346405, 1.352112676056338, 2.4054054054054053, 0.9920948616600791, 0.8905660377358491, 0.9128787878787878, 0.6428571428571429, 0.726962457337884, 1.0612244897959184, 0.6710963455149501, 2.5815602836879434, 0.909433962264151, 0.5634674922600619, 2.7686567164179103, 0.4764705882352941, 1.7679558011049723, 3.7009345794392523, 1.0658436213991769, 1.1774891774891776, 0.17016317016317017, 1.1092436974789917, 1.1452991452991452, 1.3194444444444444, 1.7988826815642458], "breadth_composite": [0.43060801565763024, 0.5285366295497752, 0.5489962701122697, 0.5893897043373475, 0.48165046550401286, 0.5809566400142032, 0.5672417307037664, 0.5608264299378543, 0.5609254765222078, 0.5855854340680183, 0.5937464822730781, 0.563424634083503, 0.48535083548939034, 0.6024980396939684, 0.5540331067897944, 0.5106801417190129, 0.5525760357303945, 0.5264703138671182, 0.4985706526334866, 0.5292402315515822, 0.5104165106391599, 0.53291234405036, 0.5287270427398675, 0.5797029617496953, 0.5244581256202401, 0.6226786803662994, 0.5859483359336336, 0.6062013899381085, 0.6114513751740673, 0.565330399974968, 0.6376633971109377, 0.594714038786439, 0.6152565548801465, 0.5674525927811969, 0.6178597000403904, 0.5497575466551757, 0.6136488245940125, 0.5731258069706432, 0.6048915747740647, 0.5838064494399472, 0.5691273186692603, 0.5049917375032624, 0.5498789318765445, 0.4763373063465027, 0.4557734378276594, 0.48092139993505795, 0.4299880330826913, 0.42200651340406664, 0.38223228578759844, 0.4277026406665361, 0.4692487225251862, 0.45382780674192663, 0.3616059983213804, 0.4091474807266402, 0.3596325366776752, 0.45990111320207466, 0.43819880475250655, 0.45495667371585835, 0.41017971165740835, 0.3789599002356378, 0.42926904404446814, 0.5116381138217235, 0.4884769707596572, 0.5156747246456655, 0.5545275939630788, 0.5301400497902354, 0.6369092394292482, 0.6062319948327041, 0.5399498505428303, 0.6171377015918228, 0.6020106347657773, 0.5743473079833633, 0.5986516430458293, 0.6438805402062749, 0.6032135069357066, 0.5519657296712929, 0.5631522229946406, 0.5750937050428832, 0.5245066430570469, 0.5202297359943744, 0.4978049790950143, 0.460592809922096, 0.5406831056239986, 0.46939942788342925, 0.4484749685862202, 0.5029225390577328, 0.5110880753510428, 0.4477918676479045, 0.44632568519241334, 0.4481909040317571, 0.458757717903238, 0.4224904387209502, 0.4684215005581844, 0.4016689382839734, 0.48852766435348727, 0.42584899024522, 0.49442040874115123, 0.48094200989964303, 0.5319980420665076, 0.5130129290885638, 0.5108769818330712, 0.5104849953626539, 0.49095677587163206, 0.48578184061085233, 0.4978050010544684, 0.46631727269388007, 0.5359426549863009, 0.49794563712823514, 0.4749320842879153, 0.5586361282171078, 0.4803332845751129, 0.5412167900069265, 0.5772919217914944, 0.5377502468276192, 0.5517638873333053, 0.46072530300959835, 0.5122069743482648, 0.5003544159788431, 0.5001190403751296, 0.515553520129952], "pct_trending": [0.35714285714285715, 0.34523809523809523, 0.3353174603174603, 0.3373015873015873, 0.3492063492063492, 0.3611111111111111, 0.3551587301587302, 0.3630952380952381, 0.36904761904761907, 0.376984126984127, 0.39087301587301587, 0.4166666666666667, 0.4087301587301587, 0.4166666666666667, 0.4146825396825397, 0.42063492063492064, 0.4087301587301587, 0.42063492063492064, 0.4384920634920635, 0.45436507936507936, 0.44642857142857145, 0.4503968253968254, 0.4583333333333333, 0.48214285714285715, 0.5059523809523809, 0.5337301587301587, 0.5476190476190477, 0.5555555555555556, 0.5873015873015873, 0.6150793650793651, 0.6329365079365079, 0.6408730158730159, 0.6388888888888888, 0.628968253968254, 0.621031746031746, 0.625, 0.6329365079365079, 0.6170634920634921, 0.5992063492063492, 0.5912698412698413, 0.5773809523809523, 0.5694444444444444, 0.5515873015873016, 0.5396825396825397, 0.5317460317460317, 0.5376984126984127, 0.5337301587301587, 0.5376984126984127, 0.5376984126984127, 0.5337301587301587, 0.5357142857142857, 0.5376984126984127, 0.5376984126984127, 0.5376984126984127, 0.5376984126984127, 0.5357142857142857, 0.5476190476190477, 0.5277777777777778, 0.5277777777777778, 0.5357142857142857, 0.5357142857142857, 0.5238095238095238, 0.498015873015873, 0.4742063492063492, 0.44246031746031744, 0.41865079365079366, 0.39285714285714285, 0.36904761904761907, 0.3472222222222222, 0.3253968253968254, 0.30952380952380953, 0.3115079365079365, 0.27976190476190477, 0.27976190476190477, 0.2876984126984127, 0.2896825396825397, 0.2896825396825397, 0.30357142857142855, 0.2976190476190476, 0.2996031746031746, 0.2876984126984127, 0.29365079365079366, 0.2996031746031746, 0.3134920634920635, 0.32142857142857145, 0.3333333333333333, 0.3333333333333333, 0.32142857142857145, 0.3134920634920635, 0.3333333333333333, 0.3333333333333333, 0.35119047619047616, 0.36507936507936506, 0.376984126984127, 0.39087301587301587, 0.37896825396825395, 0.376984126984127, 0.36706349206349204, 0.3551587301587302, 0.3373015873015873, 0.3326732673267327, 0.32475247524752476, 0.31683168316831684, 0.32475247524752476, 0.32673267326732675, 0.31683168316831684, 0.31485148514851485, 0.299009900990099, 0.299009900990099, 0.30297029702970296, 0.2948207171314741, 0.28884462151394424, 0.2788844621513944, 0.2848605577689243, 0.28884462151394424, 0.2729083665338645, 0.2729083665338645, 0.2749003984063745, 0.27345309381237526, 0.26294820717131473], "pct_vol_high": [0.09523809523809523, 0.10912698412698413, 0.12103174603174603, 0.1388888888888889, 0.15674603174603174, 0.18055555555555555, 0.1984126984126984, 0.17857142857142858, 0.1865079365079365, 0.17857142857142858, 0.19246031746031747, 0.19246031746031747, 0.22420634920634921, 0.24603174603174602, 0.26587301587301587, 0.26587301587301587, 0.26785714285714285, 0.3134920634920635, 0.3472222222222222, 0.40674603174603174, 0.44642857142857145, 0.46825396825396826, 0.5198412698412699, 0.5416666666666666, 0.5515873015873016, 0.5734126984126984, 0.5694444444444444, 0.5674603174603174, 0.6011904761904762, 0.6706349206349206, 0.6805555555555556, 0.6884920634920635, 0.7123015873015873, 0.6944444444444444, 0.6765873015873016, 0.6904761904761905, 0.6964285714285714, 0.7202380952380952, 0.7182539682539683, 0.7043650793650794, 0.7103174603174603, 0.7321428571428571, 0.7162698412698413, 0.7202380952380952, 0.6805555555555556, 0.6388888888888888, 0.5952380952380952, 0.5813492063492064, 0.6011904761904762, 0.5634920634920635, 0.501984126984127, 0.4722222222222222, 0.48214285714285715, 0.4523809523809524, 0.48412698412698413, 0.49603174603174605, 0.45436507936507936, 0.4503968253968254, 0.45634920634920634, 0.44246031746031744, 0.4087301587301587, 0.4662698412698413, 0.4781746031746032, 0.4662698412698413, 0.4444444444444444, 0.4126984126984127, 0.501984126984127, 0.5059523809523809, 0.5099206349206349, 0.5099206349206349, 0.503968253968254, 0.5436507936507936, 0.5734126984126984, 0.5416666666666666, 0.5277777777777778, 0.5099206349206349, 0.5257936507936508, 0.6031746031746031, 0.6428571428571429, 0.6051587301587301, 0.5972222222222222, 0.6071428571428571, 0.626984126984127, 0.6388888888888888, 0.6587301587301587, 0.6944444444444444, 0.751984126984127, 0.6984126984126984, 0.6984126984126984, 0.7103174603174603, 0.6924603174603174, 0.7023809523809523, 0.6984126984126984, 0.7162698412698413, 0.6964285714285714, 0.7162698412698413, 0.7321428571428571, 0.7281746031746031, 0.6706349206349206, 0.6646825396825397, 0.6831683168316832, 0.6653465346534654, 0.6475247524752475, 0.6237623762376238, 0.6455445544554456, 0.6514851485148515, 0.6811881188118812, 0.6633663366336634, 0.6633663366336634, 0.6871287128712872, 0.6832669322709163, 0.7310756972111554, 0.7131474103585658, 0.7390438247011952, 0.6972111553784861, 0.7290836653386454, 0.7290836653386454, 0.7191235059760956, 0.7345309381237525, 0.7689243027888446], "new_highs_pct": [0.051587301587301584, 0.1527777777777778, 0.19047619047619047, 0.23015873015873015, 0.1746031746031746, 0.19444444444444445, 0.23015873015873015, 0.1984126984126984, 0.19047619047619047, 0.20436507936507936, 0.22817460317460317, 0.21825396825396826, 0.1130952380952381, 0.2222222222222222, 0.2123015873015873, 0.16071428571428573, 0.16666666666666666, 0.20833333333333334, 0.1884920634920635, 0.2123015873015873, 0.18452380952380953, 0.2361111111111111, 0.2757936507936508, 0.2718253968253968, 0.251984126984127, 0.3273809523809524, 0.3194444444444444, 0.2837301587301587, 0.30357142857142855, 0.22420634920634921, 0.26785714285714285, 0.26587301587301587, 0.20634920634920634, 0.22817460317460317, 0.2777777777777778, 0.24404761904761904, 0.27380952380952384, 0.23809523809523808, 0.2361111111111111, 0.25992063492063494, 0.2698412698412698, 0.18452380952380953, 0.18452380952380953, 0.10119047619047619, 0.09722222222222222, 0.08928571428571429, 0.061507936507936505, 0.07539682539682539, 0.08333333333333333, 0.08333333333333333, 0.09325396825396826, 0.10912698412698413, 0.07539682539682539, 0.07738095238095238, 0.031746031746031744, 0.0496031746031746, 0.07539682539682539, 0.08333333333333333, 0.061507936507936505, 0.06349206349206349, 0.06349206349206349, 0.06349206349206349, 0.06547619047619048, 0.08134920634920635, 0.06746031746031746, 0.07539682539682539, 0.13095238095238096, 0.16468253968253968, 0.15873015873015872, 0.12698412698412698, 0.1349206349206349, 0.09325396825396826, 0.1349206349206349, 0.1765873015873016, 0.16666666666666666, 0.14285714285714285, 0.13095238095238096, 0.16666666666666666, 0.15476190476190477, 0.13293650793650794, 0.0992063492063492, 0.09722222222222222, 0.19444444444444445, 0.16071428571428573, 0.1388888888888889, 0.1527777777777778, 0.16865079365079366, 0.07142857142857142, 0.11904761904761904, 0.14285714285714285, 0.1130952380952381, 0.14682539682539683, 0.15873015873015872, 0.10119047619047619, 0.10714285714285714, 0.09523809523809523, 0.1130952380952381, 0.09722222222222222, 0.1388888888888889, 0.15079365079365079, 0.12277227722772277, 0.1188118811881188, 0.11089108910891089, 0.10495049504950495, 0.1188118811881188, 0.12079207920792079, 0.13663366336633664, 0.0891089108910891, 0.08514851485148515, 0.11287128712871287, 0.09362549800796813, 0.1294820717131474, 0.16733067729083664, 0.15737051792828685, 0.1454183266932271, 0.09362549800796813, 0.12749003984063745, 0.16334661354581673, 0.11776447105788423, 0.14342629482071714], "new_lows_pct": [0.031746031746031744, 0.02976190476190476, 0.025793650793650792, 0.025793650793650792, 0.031746031746031744, 0.025793650793650792, 0.023809523809523808, 0.023809523809523808, 0.025793650793650792, 0.027777777777777776, 0.02976190476190476, 0.03373015873015873, 0.03968253968253968, 0.03373015873015873, 0.02976190476190476, 0.02976190476190476, 0.031746031746031744, 0.037698412698412696, 0.03968253968253968, 0.04365079365079365, 0.04365079365079365, 0.041666666666666664, 0.057539682539682536, 0.05555555555555555, 0.05952380952380952, 0.05952380952380952, 0.057539682539682536, 0.05555555555555555, 0.06547619047619048, 0.07738095238095238, 0.07341269841269842, 0.07142857142857142, 0.06547619047619048, 0.06746031746031746, 0.06944444444444445, 0.07936507936507936, 0.07539682539682539, 0.06746031746031746, 0.057539682539682536, 0.061507936507936505, 0.057539682539682536, 0.05357142857142857, 0.04563492063492063, 0.04563492063492063, 0.0496031746031746, 0.05357142857142857, 0.06349206349206349, 0.06746031746031746, 0.07936507936507936, 0.07936507936507936, 0.07738095238095238, 0.06746031746031746, 0.07341269841269842, 0.07341269841269842, 0.07738095238095238, 0.07142857142857142, 0.07936507936507936, 0.08333333333333333, 0.0873015873015873, 0.10119047619047619, 0.09523809523809523, 0.08333333333333333, 0.08928571428571429, 0.08928571428571429, 0.08531746031746032, 0.0873015873015873, 0.08531746031746032, 0.08928571428571429, 0.09325396825396826, 0.0873015873015873, 0.08928571428571429, 0.07341269841269842, 0.06746031746031746, 0.06349206349206349, 0.061507936507936505, 0.061507936507936505, 0.05952380952380952, 0.07142857142857142, 0.07341269841269842, 0.07539682539682539, 0.07142857142857142, 0.07341269841269842, 0.07936507936507936, 0.07539682539682539, 0.07539682539682539, 0.07936507936507936, 0.08531746031746032, 0.07936507936507936, 0.08333333333333333, 0.08928571428571429, 0.09325396825396826, 0.09722222222222222, 0.09722222222222222, 0.10119047619047619, 0.09325396825396826, 0.09722222222222222, 0.08928571428571429, 0.07936507936507936, 0.07936507936507936, 0.07539682539682539, 0.07326732673267326, 0.07128712871287128, 0.07326732673267326, 0.061386138613861385, 0.07128712871287128, 0.07722772277227723, 0.06732673267326733, 0.06930693069306931, 0.07128712871287128, 0.06930693069306931, 0.07768924302788845, 0.08167330677290836, 0.07569721115537849, 0.0796812749003984, 0.08167330677290836, 0.09362549800796813, 0.08764940239043825, 0.09362549800796813, 0.09580838323353294, 0.09163346613545817], "pct_strong_mom": [0.07341269841269842, 0.10317460317460317, 0.10912698412698413, 0.14285714285714285, 0.09523809523809523, 0.12301587301587301, 0.15873015873015872, 0.1111111111111111, 0.0873015873015873, 0.13095238095238096, 0.15079365079365079, 0.1746031746031746, 0.1488095238095238, 0.1746031746031746, 0.17261904761904762, 0.13293650793650794, 0.13690476190476192, 0.14682539682539683, 0.1527777777777778, 0.1488095238095238, 0.1488095238095238, 0.20436507936507936, 0.21626984126984128, 0.25396825396825395, 0.1865079365079365, 0.3055555555555556, 0.25, 0.24603174603174602, 0.2916666666666667, 0.24801587301587302, 0.23809523809523808, 0.20833333333333334, 0.22420634920634921, 0.25793650793650796, 0.21031746031746032, 0.2123015873015873, 0.23214285714285715, 0.20436507936507936, 0.18253968253968253, 0.251984126984127, 0.2261904761904762, 0.15873015873015872, 0.1865079365079365, 0.11706349206349206, 0.11507936507936507, 0.11706349206349206, 0.07936507936507936, 0.07738095238095238, 0.061507936507936505, 0.05952380952380952, 0.07539682539682539, 0.07539682539682539, 0.06547619047619048, 0.057539682539682536, 0.047619047619047616, 0.0496031746031746, 0.06349206349206349, 0.06349206349206349, 0.051587301587301584, 0.04365079365079365, 0.03373015873015873, 0.027777777777777776, 0.03571428571428571, 0.041666666666666664, 0.04365079365079365, 0.07341269841269842, 0.07936507936507936, 0.08928571428571429, 0.09325396825396826, 0.19642857142857142, 0.21626984126984128, 0.18055555555555555, 0.1626984126984127, 0.2837301587301587, 0.3055555555555556, 0.3333333333333333, 0.2619047619047619, 0.22817460317460317, 0.22023809523809523, 0.25396825396825395, 0.2896825396825397, 0.2876984126984127, 0.23809523809523808, 0.22023809523809523, 0.20238095238095238, 0.21626984126984128, 0.24404761904761904, 0.16865079365079366, 0.19246031746031747, 0.21031746031746032, 0.17261904761904762, 0.15674603174603174, 0.18253968253968253, 0.15079365079365079, 0.1488095238095238, 0.125, 0.12698412698412698, 0.11904761904761904, 0.14682539682539683, 0.15079365079365079, 0.1485148514851485, 0.16435643564356436, 0.17425742574257425, 0.16831683168316833, 0.1603960396039604, 0.18415841584158416, 0.1603960396039604, 0.11089108910891089, 0.11485148514851486, 0.12277227722772277, 0.11155378486055777, 0.15338645418326693, 0.199203187250996, 0.18725099601593626, 0.2151394422310757, 0.1454183266932271, 0.20119521912350596, 0.15737051792828685, 0.1157684630738523, 0.1394422310756972], "pct_weak_mom": [0.03373015873015873, 0.023809523809523808, 0.037698412698412696, 0.04563492063492063, 0.04563492063492063, 0.0496031746031746, 0.04365079365079365, 0.04563492063492063, 0.0496031746031746, 0.03571428571428571, 0.03571428571428571, 0.047619047619047616, 0.06349206349206349, 0.05555555555555555, 0.05555555555555555, 0.07539682539682539, 0.06349206349206349, 0.0873015873015873, 0.10317460317460317, 0.1111111111111111, 0.10912698412698413, 0.09325396825396826, 0.1349206349206349, 0.14285714285714285, 0.18452380952380953, 0.15674603174603174, 0.17063492063492064, 0.16865079365079366, 0.1746031746031746, 0.20436507936507936, 0.1884920634920635, 0.19642857142857142, 0.16865079365079366, 0.14682539682539683, 0.15674603174603174, 0.2003968253968254, 0.1746031746031746, 0.17063492063492064, 0.1349206349206349, 0.125, 0.12698412698412698, 0.11904761904761904, 0.11706349206349206, 0.0992063492063492, 0.19642857142857142, 0.14285714285714285, 0.22817460317460317, 0.23015873015873015, 0.31547619047619047, 0.33134920634920634, 0.21428571428571427, 0.22420634920634921, 0.2837301587301587, 0.31746031746031744, 0.3412698412698413, 0.3194444444444444, 0.25, 0.25793650793650796, 0.3253968253968254, 0.44047619047619047, 0.44246031746031744, 0.2976190476190476, 0.20436507936507936, 0.21825396825396826, 0.1527777777777778, 0.1488095238095238, 0.09523809523809523, 0.09722222222222222, 0.10317460317460317, 0.06944444444444445, 0.06746031746031746, 0.05952380952380952, 0.037698412698412696, 0.03373015873015873, 0.027777777777777776, 0.031746031746031744, 0.03373015873015873, 0.03968253968253968, 0.05555555555555555, 0.061507936507936505, 0.051587301587301584, 0.041666666666666664, 0.047619047619047616, 0.0496031746031746, 0.061507936507936505, 0.06746031746031746, 0.07936507936507936, 0.09325396825396826, 0.12103174603174603, 0.12896825396825398, 0.1349206349206349, 0.1746031746031746, 0.1765873015873016, 0.20436507936507936, 0.21626984126984128, 0.22420634920634921, 0.17063492063492064, 0.14484126984126985, 0.1130952380952381, 0.08928571428571429, 0.09108910891089109, 0.06732673267326733, 0.06534653465346535, 0.08712871287128712, 0.09108910891089109, 0.09702970297029703, 0.07524752475247524, 0.09702970297029703, 0.09108910891089109, 0.061386138613861385, 0.10358565737051793, 0.07569721115537849, 0.06573705179282868, 0.0697211155378486, 0.06772908366533864, 0.10358565737051793, 0.1254980079681275, 0.13745019920318724, 0.11976047904191617, 0.1294820717131474]}, "regime_distribution_1y": {"Recovery": 217, "Bull": 30, "Bear": 3, "Caution": 2}, "extreme_events": [{"date": "2025-12-31", "type": "Capitulation", "advance_pct": 0.03373015873015873}], "divergence_events": [{"date": "2026-05-28", "type": "Bearish Divergence"}, {"date": "2026-05-29", "type": "Bearish Divergence"}, {"date": "2026-06-01", "type": "Bearish Divergence"}, {"date": "2026-06-02", "type": "Bearish Divergence"}, {"date": "2026-06-03", "type": "Bearish Divergence"}]}, "strategy_summary": {"total_tech_stocks": 75, "total_qualifying": 14, "n_t1_dip": 0, "n_t1_mom": 0, "n_t2": 0, "n_t3": 14}, "strategy_history": {"dates": ["2024-01-29", "2024-02-12", "2024-02-27", "2024-03-12", "2024-03-26", "2024-04-10", "2024-04-24", "2024-05-08", "2024-05-22", "2024-06-06", "2024-06-21", "2024-07-08", "2024-07-22", "2024-08-05", "2024-08-19", "2024-09-03", "2024-09-17", "2024-10-01", "2024-10-15", "2024-10-29", "2024-11-12", "2024-11-26", "2024-12-11", "2024-12-26", "2025-01-13", "2025-01-28", "2025-02-11", "2025-02-26", "2025-03-12", "2025-03-26", "2025-04-09", "2025-04-24", "2025-05-08", "2025-05-22", "2025-06-06", "2025-06-23", "2025-07-08", "2025-07-22", "2025-08-05", "2025-08-19", "2025-09-03", "2025-09-17", "2025-10-01", "2025-10-15", "2025-10-29", "2025-11-12", "2025-11-26", "2025-12-11", "2025-12-26", "2026-01-12", "2026-01-27", "2026-02-10", "2026-02-25", "2026-03-11", "2026-03-25", "2026-04-09", "2026-04-23", "2026-05-07", "2026-05-21", "2026-06-24"], "t1_dip": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "t1_mom": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "t2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "t3": [0, 1, 2, 0, 4, 2, 2, 3, 2, 3, 1, 0, 0, 0, 2, 2, 1, 2, 1, 1, 1, 1, 4, 3, 1, 5, 4, 2, 0, 0, 0, 0, 2, 5, 4, 6, 3, 2, 2, 2, 2, 1, 3, 4, 4, 3, 3, 3, 2, 3, 5, 7, 2, 2, 1, 2, 5, 5, 3, 14], "breadth_composite": [0.72, 0.72, 0.56, 0.72, 0.56, 0.32, 0.32, 0.32, 0.56, 0.56, 0.72, 0.72, 0.72, 0.32, 0.56, 0.32, 0.56, 0.72, 0.72, 0.72, 0.72, 0.72, 0.56, 0.56, 0.32, 0.56, 0.56, 0.32, 0.32, 0.32, 0.32, 0.32, 0.72, 0.72, 0.72, 0.72, 0.72, 0.72, 0.56, 0.56, 0.56, 0.56, 0.56, 0.56, 0.56, 0.32, 0.32, 0.56, 0.56, 0.56, 0.56, 0.56, 0.32, 0.32, 0.32, 0.56, 0.56, 0.72, 0.72, 0.515553520129952], "regime": ["STRONG_UP", "STRONG_UP", "UP", "STRONG_UP", "UP", "WEAK", "WEAK", "WEAK", "UP", "UP", "STRONG_UP", "STRONG_UP", "STRONG_UP", "WEAK", "UP", "WEAK", "UP", "STRONG_UP", "STRONG_UP", "STRONG_UP", "STRONG_UP", "STRONG_UP", "UP", "UP", "WEAK", "UP", "UP", "WEAK", "WEAK", "WEAK", "WEAK", "WEAK", "STRONG_UP", "STRONG_UP", "STRONG_UP", "STRONG_UP", "STRONG_UP", "STRONG_UP", "UP", "UP", "UP", "UP", "UP", "UP", "UP", "WEAK", "WEAK", "UP", "UP", "UP", "UP", "UP", "WEAK", "WEAK", "WEAK", "UP", "UP", "STRONG_UP", "STRONG_UP", "UP"]}, "health_interpretation": {"t1_dip_pct_on": "3.6", "t1_all_pct_on": "10.8", "t1_dip_spy_21d_fwd": "+3.6%", "t1_dip_spy_21d_wr": "90%", "t1_dip_spy_63d_fwd": "+9.3%", "t1_dip_spy_63d_wr": "94%", "weak_to_strong_up_wr_21d": "92%"}}/*__END_DATA__*/;
+
+function loadAndRender() {
+  if (!DASHBOARD_DATA) {
+    document.body.innerHTML = '<div style="text-align:center;padding:60px;color:#ef4444">' +
+      '<h2>Dashboard not initialized</h2>' +
+      '<p style="color:#94a3b8;margin-top:12px">Run: python3 scripts/tech_screener/generate_dashboard.py</p>' +
+      '<p style="color:#64748b;font-size:0.8rem;margin-top:8px">This embeds live data directly into index.html</p></div>';
+    return;
+  }
+  render(DASHBOARD_DATA);
+}
+
+function render(d) {
+ // Header
+ document.getElementById('headerDate').textContent = d.date;
+ document.getElementById('updateTime').textContent = 'Updated: ' + new Date(d.generated_at).toLocaleString();
+
+ // Data freshness warning
+ if (d.data_freshness && d.data_freshness.is_stale) {
+  document.getElementById('staleWarning').style.display = 'flex';
+  document.getElementById('staleMsg').textContent =
+   'Data is ' + d.data_freshness.days_behind + ' days behind (data: ' + d.date + ', today: ' + d.data_freshness.today + '). Run daily_update.py to refresh.';
+ } else {
+  document.getElementById('staleWarning').style.display = 'none';
+ }
+
+ const m = d.market_status;
+  const regimeClass = m.regime === 'STRONG_UP' ? 'strong-up' : m.regime === 'UP' ? 'up' : 'weak';
+
+  // Regime banner
+  const banner = document.getElementById('regimeBanner');
+  banner.className = 'regime-banner ' + regimeClass;
+  document.getElementById('regimeValue').textContent = m.regime_display;
+  document.getElementById('regimeExposure').textContent = 'Exposure: ' + m.exposure_pct + '%';
+
+  const regimeColors = {STRONG_UP:'var(--green)', UP:'var(--yellow)', WEAK:'var(--red)'};
+  document.getElementById('regimeValue').style.color = regimeColors[m.regime] || 'var(--text)';
+
+  document.getElementById('regimeMetrics').innerHTML = [
+    regimeMetric('Breadth', m.breadth + '%', m.breadth >= 70 ? 'var(--green)' : m.breadth >= 50 ? 'var(--yellow)' : 'var(--red)'),
+    regimeMetric('VIX', m.vix ? m.vix.toFixed(1) : 'N/A', m.vix && m.vix < 20 ? 'var(--green)' : m.vix && m.vix < 25 ? 'var(--yellow)' : 'var(--red)'),
+    regimeMetric('SPY', m.spy_price ? '$' + m.spy_price : 'N/A', 'var(--text)'),
+    regimeMetric('SPY Trend', m.spy_trend, m.spy_trend === 'Bullish' ? 'var(--green)' : m.spy_trend === 'Bearish' ? 'var(--red)' : 'var(--yellow)'),
+  ].join('');
+
+  // Metrics grid
+  const s = d.strategy_summary;
+  document.getElementById('metricsGrid').innerHTML = [
+    metricCard('Leading Theme', d.theme_leadership.leader, d.theme_leadership.runner ? 'Runner: ' + d.theme_leadership.runner : '', 'var(--accent)'),
+    metricCard('T1_DIP Stocks', s.n_t1_dip, '94% WR dip-buy signals', 'var(--green)'),
+    metricCard('T1_MOM Stocks', s.n_t1_mom, '82% WR momentum signals', 'var(--accent)'),
+    metricCard('T2 Stocks', s.n_t2, '76% WR pullback signals', 'var(--yellow)'),
+    metricCard('T3 Stocks', s.n_t3, 'Moderate conviction', 'var(--purple)'),
+    metricCard('Total Qualifying', s.total_qualifying, 'of ' + s.total_tech_stocks + ' tech stocks', 'var(--text)'),
+  ].join('');
+
+  // Signal summary
+  const a = d.actionable_stocks;
+  document.getElementById('signalSummary').innerHTML = [
+    signalBox('t1-dip', 'T1_DIP: Dip-Buy in Leaders', 'Leader + Vol65% + RSI 30-55 + Above 50d', a.T1_DIP.wr + '%', a.T1_DIP.avg_return + '% avg', a.T1_DIP.stocks.length),
+    signalBox('t1-mom', 'T1_MOM: Leader Momentum', 'Leader + Vol65% + RSI 55+ + Above 50d', a.T1_DIP.wr + '% / ' + a.T1_MOM.wr + '%', a.T1_MOM.avg_return + '% avg', a.T1_MOM.stocks.length),
+    signalBox('t2', 'T2: Pullback Momentum', 'Vol65% + RSI 30-55 + Above 50d (any theme)', a.T2.wr + '%', a.T2.avg_return + '% avg', a.T2.stocks.length),
+    signalBox('t3', 'T3: Moderate / Defensive', 'UP regime or MAG7 defensive', a.T3.wr + '%', a.T3.avg_return + '% avg', a.T3.stocks.length),
+  ].join('');
+
+  // Portfolio
+  const port = d.portfolio_recommendation;
+  if (port.length === 0) {
+    document.getElementById('portfolioGrid').innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">' +
+      '<div style="font-size:1.3rem;font-weight:700;margin-bottom:8px">No stocks qualify today</div>' +
+      '<div>Current regime (' + m.regime_display + ') has no high-conviction signals. Stay defensive.</div></div>';
+  } else {
+    document.getElementById('portfolioGrid').innerHTML = port.map(s => {
+      const tierColors = {T1_DIP:'var(--green)', T1_MOM:'var(--accent)', T2:'var(--yellow)', T3:'var(--purple)'};
+      const tierLabels = {T1_DIP:'94% WR', T1_MOM:'82% WR', T2:'76% WR', T3:'~70% WR'};
+      const c = tierColors[s.portfolio_tier] || 'var(--muted)';
+      return '<div class="port-card" style="border-left:3px solid ' + c + '">' +
+        '<div class="ticker">' + s.ticker + ' <span class="badge" style="background:' + c + '22;color:' + c + '">' + (tierLabels[s.portfolio_tier]||'') + '</span></div>' +
+        '<div class="name">' + s.name + ' — ' + s.theme + '</div>' +
+        '<div class="metrics">' +
+          metric('RSI', s.rsi, rsiColor(s.rsi)) +
+          metric('Vol', (s.vol63*100).toFixed(0) + '%', 'var(--text)') +
+          metric('21d', (s.ret_21d>0?'+':'') + s.ret_21d + '%', s.ret_21d>0?'var(--green)':'var(--red)') +
+          metric('Price', s.price ? '$'+s.price : 'N/A', 'var(--text)') +
+          metric('Signal', s.signal, c) +
+          metric('Above 50d', s.above_50d?'Yes':'No', s.above_50d?'var(--green)':'var(--red)') +
+        '</div></div>';
+    }).join('');
+  }
+
+  // Theme ranking
+  document.getElementById('themeRanking').innerHTML = d.theme_leadership.theme_ranking.map((t, i) => {
+    const rowClass = t.is_leader ? 'leader' : t.is_runner ? 'runner' : '';
+    const badge = t.is_leader ? '<span class="theme-badge" style="background:#22d3ee22;color:var(--accent)">LEADER</span>'
+                : t.is_runner ? '<span class="theme-badge" style="background:#f59e0b22;color:var(--yellow)">RUNNER</span>' : '';
+    const ret = t.ret_21d;
+    const barW = Math.max(0, Math.min(100, (ret||0) * 3 + 30));
+    const barColor = ret > 10 ? 'var(--green)' : ret > 0 ? 'var(--accent)' : ret < -5 ? 'var(--red)' : 'var(--yellow)';
+    return '<div class="theme-row ' + rowClass + '">' +
+      '<div class="theme-rank">#' + (i+1) + '</div>' +
+      '<div class="theme-name">' + t.theme + ' ' + badge + '</div>' +
+      '<div class="theme-bar-wrap"><div class="theme-bar" style="width:' + barW + '%;background:' + barColor + '"></div></div>' +
+      '<div class="theme-ret" style="color:' + barColor + '">' + (ret>0?'+':'') + (ret||0) + '%</div>' +
+      '<div class="theme-qual">' + t.n_qualifying + '/' + t.n_total + '</div>' +
+      '</div>';
+  }).join('');
+
+  // Stock tables
+  document.getElementById('t1DipTable').innerHTML = stockTable(a.T1_DIP.stocks, 't1-dip');
+  document.getElementById('t1MomTable').innerHTML = stockTable(a.T1_MOM.stocks, 't1-mom');
+  document.getElementById('t2Table').innerHTML = stockTable(a.T2.stocks, 't2');
+  document.getElementById('t3Table').innerHTML = stockTable(a.T3.stocks, 't3');
+
+  // Breadth chart
+  renderBreadthChart(d.breadth_history);
+
+ // Sub-industry table
+ document.getElementById('subIndTable').innerHTML = siTable(d.sub_industry_ranking);
+
+ // Regime history
+ document.getElementById('regimeHistory').innerHTML = d.recent_regime_history.map(h => {
+ const zColor = {STRONG_UP:'var(--green)', UP:'var(--yellow)', WEAK:'var(--red)', NEUTRAL:'var(--purple)'}[h.zone]||'var(--muted)';
+ return '<div class="history-row">' +
+ '<span class="h-date">' + h.date + '</span>' +
+ '<span class="h-zone" style="color:' + zColor + ';font-weight:600">' + h.zone + '</span>' +
+ '<span style="flex:1">Breadth: ' + h.breadth + '% | Leader: ' + h.leader + ' | Stocks: ' + h.n_stocks + '</span>' +
+ '<span style="color:var(--muted);font-size:0.75rem">' + (h.exposure*100) + '%</span>' +
+ '</div>';
+ }).join('');
+
+ // S&P 500 Breadth Health section
+ renderBreadthHealth(d);
+
+ // Market health interpretation
+ renderHealthInterp(d);
+
+  // ─── Strategy History Charts ────────────────────────────────────────
+  renderStrategyHistoryChart(d);
+  renderTierPieChart(d);
+  renderHealthScoreChart(d);
+}
+
+// ===== HELPERS =====
+function regimeMetric(label, value, color) {
+  return '<div class="regime-metric"><div class="val" style="color:' + color + '">' + value + '</div><div class="lbl">' + label + '</div></div>';
+}
+function metricCard(label, value, sub, color) {
+  return '<div class="card"><div class="cl">' + label + '</div><div class="cv" style="color:' + color + '">' + value + '</div><div class="cs">' + sub + '</div></div>';
+}
+function signalBox(cls, title, desc, wr, avg, count) {
+  return '<div class="signal-box ' + cls + '">' +
+    '<div class="signal-left"><div class="signal-title">' + title + '</div><div class="signal-desc">' + desc + '</div></div>' +
+    '<div class="signal-stats"><div class="signal-wr">' + wr + '</div><div class="signal-count">' + count + ' stocks | ' + avg + '</div></div></div>';
+}
+function metric(label, value, color) {
+  return '<div class="metric"><div class="m-val" style="color:' + color + '">' + value + '</div><div class="m-lbl">' + label + '</div></div>';
+}
+function rsiColor(rsi) {
+  if (rsi === null || rsi === undefined) return 'var(--muted)';
+  if (rsi < 30) return 'var(--red)';
+  if (rsi <= 55) return 'var(--green)';
+  if (rsi <= 70) return 'var(--accent)';
+  return 'var(--yellow)';
+}
+function stockTable(stocks, rowClass) {
+  if (!stocks || stocks.length === 0) {
+    return '<div style="text-align:center;padding:16px;color:var(--dim);font-size:0.85rem">No stocks qualify in this tier today</div>';
+  }
+  let html = '<table class="stock-table"><thead><tr>' +
+    '<th>Ticker</th><th>Name</th><th>Theme</th><th>RSI</th><th>Vol</th><th>21d</th><th>5d</th><th>Price</th><th>Signal</th>' +
+    '</tr></thead><tbody>';
+  for (const s of stocks) {
+    const retColor = s.ret_21d > 0 ? 'var(--green)' : 'var(--red)';
+    const ret5Color = s.ret_5d > 0 ? 'var(--green)' : 'var(--red)';
+    html += '<tr class="' + rowClass + '">' +
+      '<td class="ticker">' + s.ticker + '</td>' +
+      '<td style="font-size:0.8rem">' + (s.name||'').substring(0,20) + '</td>' +
+      '<td style="font-size:0.8rem">' + s.theme + '</td>' +
+      '<td style="color:' + rsiColor(s.rsi) + ';font-weight:600">' + s.rsi + '</td>' +
+      '<td>' + (s.vol63*100).toFixed(0) + '%</td>' +
+      '<td style="color:' + retColor + ';font-weight:600">' + (s.ret_21d>0?'+':'') + s.ret_21d + '%</td>' +
+      '<td style="color:' + ret5Color + '">' + (s.ret_5d>0?'+':'') + s.ret_5d + '%</td>' +
+      '<td>' + (s.price ? '$'+s.price : '-') + '</td>' +
+      '<td style="font-size:0.75rem">' + s.signal + '</td>' +
+      '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+function siTable(data) {
+  if (!data || data.length === 0) return '<div style="color:var(--dim)">No data</div>';
+  let html = '<table class="si-table"><thead><tr><th>#</th><th>Sub-Industry</th><th>Theme</th><th>Avg 21d</th><th>Qual</th></tr></thead><tbody>';
+  data.forEach((si, i) => {
+    const retColor = si.avg_ret_21d > 5 ? 'var(--green)' : si.avg_ret_21d > 0 ? 'var(--accent)' : 'var(--red)';
+    const leaderMark = si.is_leader_theme ? ' <span class="badge b-accent">LEAD</span>' : '';
+    html += '<tr><td style="color:var(--dim)">' + (i+1) + '</td>' +
+      '<td>' + si.sub_ind + leaderMark + '</td>' +
+      '<td style="font-size:0.75rem">' + si.theme + '</td>' +
+      '<td style="color:' + retColor + ';font-weight:600">' + (si.avg_ret_21d>0?'+':'') + si.avg_ret_21d + '%</td>' +
+      '<td>' + si.n_qualifying + '/' + si.n_total + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function renderBreadthChart(bh) {
+  if (!bh || !bh.dates || bh.dates.length === 0) return;
+  const ctx = document.getElementById('breadthChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: bh.dates,
+      datasets: [{
+        label: 'Tech % Above 50d SMA',
+        data: bh.values,
+        borderColor: '#22d3ee',
+        backgroundColor: 'rgba(34,211,238,0.08)',
+        fill: true,
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        annotation: {},
+      },
+      scales: {
+        x: {
+          ticks: { color: '#64748b', maxTicksLimit: 6, font: { size: 9 } },
+          grid: { color: '#1e293b' },
+        },
+        y: {
+          min: 0, max: 100,
+          ticks: {
+            color: '#64748b',
+            font: { size: 9 },
+            callback: v => v + '%',
+          },
+          grid: {
+            color: function(context) {
+              if (context.tick.value === 70) return '#10b98155';
+              if (context.tick.value === 50) return '#f59e0b55';
+              return '#1e293b';
+            },
+            lineWidth: function(context) {
+              return (context.tick.value === 70 || context.tick.value === 50) ? 2 : 1;
+            },
+          },
+        }
+      }
+    },
+    plugins: [{
+      id: 'thresholdLines',
+      beforeDraw: function(chart) {
+        const ctx = chart.ctx;
+        const yScale = chart.scales.y;
+        const xScale = chart.scales.x;
+        // 70% line
+        const y70 = yScale.getPixelForValue(70);
+        ctx.save();
+        ctx.strokeStyle = '#10b98166';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(xScale.left, y70);
+        ctx.lineTo(xScale.right, y70);
+        ctx.stroke();
+        ctx.fillStyle = '#10b981';
+        ctx.font = '9px system-ui';
+        ctx.fillText('STRONG_UP 70%', xScale.right - 80, y70 - 4);
+        // 50% line
+        const y50 = yScale.getPixelForValue(50);
+        ctx.strokeStyle = '#f59e0b66';
+        ctx.beginPath();
+        ctx.moveTo(xScale.left, y50);
+        ctx.lineTo(xScale.right, y50);
+        ctx.stroke();
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillText('UP 50%', xScale.right - 45, y50 - 4);
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+// ===== INIT =====
+loadAndRender();
+
+// ===== S&P 500 BREADTH HEALTH RENDERING =====
+function renderBreadthHealth(d) {
+ const b = d.sp500_breadth;
+ if (!b || !b.current || Object.keys(b.current).length === 0) {
+ document.getElementById('breadthContent').innerHTML =
+ '<div style="text-align:center;padding:30px;color:var(--dim)">Breadth data not available</div>';
+ return;
+ }
+ const c = b.current;
+ const h = b.history_120d;
+ let html = '';
+
+ // ─── Breadth Regime Banner ──────────────────────────────────────
+ const brClass = (c.breadth_regime || '').toLowerCase();
+ const brColor = {Bull:'var(--green)', Caution:'var(--yellow)', Bear:'var(--red)', Recovery:'var(--accent)'}[c.breadth_regime] || 'var(--muted)';
+ html += '<div class="breadth-regime-banner ' + brClass + '">' +
+ '<div><div class="br-label">S&P 500 Breadth Regime</div><div class="br-val" style="color:' + brColor + '">' + (c.breadth_regime || 'N/A') + '</div></div>' +
+ '<div style="display:flex;gap:20px;flex-wrap:wrap">' +
+ breadthRegimeMetric('Composite', (c.breadth_composite * 100).toFixed(0) + '%', c.breadth_composite > 0.6 ? 'var(--green)' : c.breadth_composite > 0.4 ? 'var(--yellow)' : 'var(--red)') +
+ breadthRegimeMetric('A/D Ratio', c.adv_dec_ratio ? c.adv_dec_ratio.toFixed(2) : 'N/A', c.adv_dec_ratio > 1.5 ? 'var(--green)' : c.adv_dec_ratio > 0.8 ? 'var(--yellow)' : 'var(--red)') +
+ breadthRegimeMetric('Advance %', (c.advance_pct * 100).toFixed(0) + '%', c.advance_pct > 0.55 ? 'var(--green)' : c.advance_pct > 0.45 ? 'var(--yellow)' : 'var(--red)') +
+ '</div></div>';
+
+ // ─── Key Breadth Metrics Grid ──────────────────────────────────
+ html += '<div class="breadth-grid">' +
+ bmCard(pctFmt(c.pct_above_sma21), 'Above SMA21', 'Stocks > 5d SMA', c.pct_above_sma21 > 0.6 ? 'var(--green)' : c.pct_above_sma21 > 0.4 ? 'var(--yellow)' : 'var(--red)') +
+ bmCard(pctFmt(c.pct_above_sma200), 'Above SMA200', 'Golden Cross %', c.pct_above_sma200 > 0.6 ? 'var(--green)' : c.pct_above_sma200 > 0.4 ? 'var(--yellow)' : 'var(--red)') +
+ bmCard(pctFmt(c.pct_trending), 'Trending', 'ADX > 25', c.pct_trending > 0.4 ? 'var(--green)' : c.pct_trending > 0.25 ? 'var(--yellow)' : 'var(--red)') +
+ bmCard(pctFmt(c.pct_macd_bull), 'MACD Bullish', 'Above Signal', c.pct_macd_bull > 0.55 ? 'var(--green)' : c.pct_macd_bull > 0.4 ? 'var(--yellow)' : 'var(--red)') +
+ bmCard(pctFmt(c.pct_vol_high), 'High Vol Regime', 'Elevated Vol', c.pct_vol_high < 0.2 ? 'var(--green)' : c.pct_vol_high < 0.35 ? 'var(--yellow)' : 'var(--red)') +
+ bmCard(c.avg_rsi ? c.avg_rsi.toFixed(0) : 'N/A', 'Avg RSI', 'S&P 500 Mean', c.avg_rsi > 50 ? 'var(--green)' : c.avg_rsi > 40 ? 'var(--yellow)' : 'var(--red)') +
+ bmCard(pctFmt(c.new_highs_pct), 'Near 252d High', 'Within 2% of High', c.new_highs_pct > 0.2 ? 'var(--green)' : c.new_highs_pct > 0.05 ? 'var(--yellow)' : 'var(--red)') +
+ bmCard(pctFmt(c.pct_strong_mom), 'Strong Momentum', '21d Ret > 10%', c.pct_strong_mom > 0.15 ? 'var(--green)' : c.pct_strong_mom > 0.05 ? 'var(--yellow)' : 'var(--red)') +
+ '</div>';
+
+ // ─── Insight Boxes ─────────────────────────────────────────────
+ // Capitulation / Euphoria
+ if (c.is_capitulation) {
+ html += '<div class="breadth-insight danger"><strong>Capitulation Signal:</strong> Only ' + (c.advance_pct * 100).toFixed(0) + '% of S&P 500 stocks advanced today. Historically, capitulation days (adv < 10%) are followed by SPY 21d avg +1.5% with 68% WR — a mean-reversion opportunity.</div>';
+ }
+ if (c.is_euphoria) {
+ html += '<div class="breadth-insight warning"><strong>Euphoria Signal:</strong> ' + (c.advance_pct * 100).toFixed(0) + '% of stocks advanced. Euphoria days (adv > 90%) historically see SPY 21d avg +1.4% with 68% WR, but can mark short-term tops in already-extended markets.</div>';
+ }
+ // Bearish divergence
+ if (c.is_bearish_divergence) {
+ html += '<div class="breadth-insight warning"><strong>Bearish Divergence:</strong> SPY is up over 63 days but the Advance-Decline line is declining. This means fewer stocks are participating in the rally — a classic warning sign of potential weakness ahead. Historically, 72% WR positive at 21d, but avg returns are lower than confirmation periods.</div>';
+ }
+ // Breadth composite vs tech breadth
+ if (c.breadth_composite !== null && d.market_status.breadth) {
+ const sp500BrdPct = c.pct_above_sma21 * 100;
+ const techBrdPct = d.market_status.breadth;
+ const divergence = techBrdPct - sp500BrdPct;
+ if (Math.abs(divergence) > 15) {
+ const cls = divergence > 0 ? 'bullish' : 'warning';
+ const msg = divergence > 0
+ ? 'Tech breadth (' + techBrdPct.toFixed(0) + '%) is well above S&P 500 breadth (' + sp500BrdPct.toFixed(0) + '%). Tech is leading the market higher — this is bullish for the screener strategy.'
+ : 'S&P 500 breadth (' + sp500BrdPct.toFixed(0) + '%) exceeds tech breadth (' + techBrdPct.toFixed(0) + '%). The broader market is healthier than tech — watch for rotation into non-tech sectors.';
+ html += '<div class="breadth-insight ' + cls + '"><strong>Breadth Divergence (Tech vs S&P):</strong> ' + msg + '</div>';
+ }
+ }
+
+ // ─── Charts Row ────────────────────────────────────────────────
+ html += '<div class="breadth-chart-row">' +
+ '<div class="breadth-card"><h4>S&P 500 Composite Breadth Score (120d)</h4><div style="width:100%; max-width:500px;"><canvas id="breadthCompositeChart" height="120"></canvas></div></div>' +
+ '<div class="breadth-card"><h4>% Above Key SMAs + Advance % (120d)</h4><div style="width:100%; max-width:500px;"><canvas id="breadthSmaChart" height="120"></canvas></div></div>' +
+ '</div>';
+
+ html += '<div class="breadth-chart-row">' +
+ '<div class="breadth-card"><h4>Advance/Decline Ratio + RSI Breadth (120d)</h4><div style="width:100%; max-width:500px;"><canvas id="breadthAdRsiChart" height="120"></canvas></div></div>' +
+ '<div class="breadth-card"><h4>Highs / Lows + Momentum Breadth (120d)</h4><div style="width:100%; max-width:500px;"><canvas id="breadthMomentumChart" height="120"></canvas></div></div>' +
+ '</div>';
+
+ // ─── Regime Distribution + Events ──────────────────────────────
+ html += '<div class="breadth-chart-row">';
+ // Regime distribution
+ html += '<div class="breadth-card"><h4>Regime Distribution (Last 252 Trading Days)</h4>';
+ const rd = b.regime_distribution_1y || {};
+ const rdTotal = Object.values(rd).reduce((a,b) => a + b, 0) || 1;
+ const regimeOrder = ['Bull','Caution','Recovery','Bear'];
+ const regimeBarColors = {Bull:'#10b981', Caution:'#f59e0b', Recovery:'#22d3ee', Bear:'#ef4444'};
+ html += '<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">';
+ for (const r of regimeOrder) {
+ const count = rd[r] || 0;
+ const pct = (count / rdTotal * 100).toFixed(0);
+ html += '<div style="flex:1;text-align:center"><div style="font-size:1.2rem;font-weight:700;color:' + regimeBarColors[r] + '">' + pct + '%</div><div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase">' + r + '</div></div>';
+ }
+ html += '</div>';
+ // Regime transition insight
+ html += '<div style="font-size:0.78rem;color:var(--muted);line-height:1.5">';
+ html += '<strong style="color:var(--text)">Regime Transition Probabilities (from EDA):</strong><br>';
+ html += 'Bull stays Bull 21d later: <strong style="color:var(--green)">~64%</strong> | ';
+ html += 'Bear stays Bear: <strong style="color:var(--red)">~44%</strong> | ';
+ html += 'Recovery to Bull: <strong style="color:var(--accent)">~30%</strong><br>';
+ html += 'Bear to Recovery is the most common exit from crash mode (vs Bear to Bull which is rare).';
+ html += '</div></div>';
+
+ // Events panel
+ html += '<div class="breadth-card"><h4>Recent Extreme Breadth Events</h4>';
+ const events = b.extreme_events || [];
+ if (events.length === 0) {
+ html += '<div style="color:var(--dim);font-size:0.82rem;padding:8px 0">No capitulation/euphoria events in the last year</div>';
+ } else {
+ for (const e of events) {
+ const eColor = e.type === 'Capitulation' ? 'var(--red)' : 'var(--green)';
+ html += '<div class="breadth-event"><span class="be-date">' + e.date + '</span><span class="be-type" style="color:' + eColor + '">' + e.type + '</span><span style="color:var(--muted)">Advance: ' + (e.advance_pct * 100).toFixed(1) + '%</span></div>';
+ }
+ }
+ // Divergence events
+ const divEvents = b.divergence_events || [];
+ if (divEvents.length > 0) {
+ html += '<div style="margin-top:10px;font-size:0.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.04em">Bearish Divergences</div>';
+ for (const de of divEvents) {
+ html += '<div class="breadth-event"><span class="be-date">' + de.date + '</span><span class="be-type" style="color:var(--yellow)">' + de.type + '</span></div>';
+ }
+ }
+ html += '</div>';
+ html += '</div>';
+
+ // ─── Research Insights Table ────────────────────────────────────
+ html += '<div class="breadth-card" style="margin-top:4px"><h4>Key Findings from Breadth/Momentum EDA</h4>';
+ html += '<table class="breadth-mini-table"><thead><tr><th>Finding</th><th>Signal</th><th>SPY Fwd 21d</th><th>WR</th><th>Insight</th></tr></thead><tbody>';
+ html += bmiRow('Composite Score Q5 (best)', '>0.66', '+0.4%', '65%', 'High breadth often = near-term top');
+ html += bmiRow('Composite Score Q1 (worst)', '<0.37', '+1.5%', '70%', 'Low breadth = recovery opportunity');
+ html += bmiRow('Capitulation Day', 'Adv < 10%', '+1.5%', '68%', 'Mean-reversion signal, strong bounce');
+ html += bmiRow('Euphoria Day', 'Adv > 90%', '+1.4%', '68%', 'Short-term extended but still positive');
+ html += bmiRow('Bearish Divergence', 'SPY up, A-D down', '+0.8%', '72%', 'Fewer stocks participating, caution');
+ html += bmiRow('Bullish Confirmation', 'SPY up, A-D up', '+0.9%', '68%', 'Broad participation, healthy rally');
+ html += bmiRow('VIX < 15 (Bull)', 'Low vol', '+0.25%', '64%', 'Complacency zone, modest returns');
+ html += bmiRow('VIX 25-30 (Bear)', 'High vol', '+1.6%', '67%', 'Fear zone, better forward returns');
+ html += '</tbody></table></div>';
+
+ document.getElementById('breadthContent').innerHTML = html;
+
+ // ─── Render Charts ─────────────────────────────────────────────
+ if (h && h.dates && h.dates.length > 0) {
+ renderBreadthCompositeChart(h);
+ renderBreadthSmaChart(h);
+ renderBreadthAdRsiChart(h);
+ renderBreadthMomentumChart(h);
+ }
+}
+
+function breadthRegimeMetric(label, value, color) {
+ return '<div style="text-align:center"><div style="font-size:1.2rem;font-weight:700;color:' + color + '">' + value + '</div><div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase">' + label + '</div></div>';
+}
+function bmCard(val, lbl, sub, color) {
+ return '<div class="breadth-metric"><div class="bm-val" style="color:' + color + '">' + val + '</div><div class="bm-lbl">' + lbl + '</div><div class="bm-sub">' + sub + '</div></div>';
+}
+function pctFmt(v) {
+ if (v === null || v === undefined) return 'N/A';
+ return (v * 100).toFixed(0) + '%';
+}
+function bmiRow(finding, signal, ret, wr, insight) {
+ const retColor = ret.startsWith('+') && parseFloat(ret) > 1 ? 'var(--green)' : ret.startsWith('+') ? 'var(--accent)' : 'var(--red)';
+ return '<tr><td>' + finding + '</td><td style="color:var(--accent);font-weight:600">' + signal + '</td><td style="color:' + retColor + ';font-weight:600">' + ret + '</td><td style="font-weight:600">' + wr + '</td><td style="color:var(--muted);font-size:0.75rem">' + insight + '</td></tr>';
+}
+
+function renderBreadthCompositeChart(h) {
+ const ctx = document.getElementById('breadthCompositeChart');
+ if (!ctx) return;
+ new Chart(ctx.getContext('2d'), {
+ type: 'line',
+ data: {
+ labels: h.dates,
+ datasets: [{
+ label: 'Composite Score',
+ data: h.breadth_composite.map(v => v !== null ? v * 100 : null),
+ borderColor: '#a855f7',
+ backgroundColor: 'rgba(168,85,247,0.06)',
+ fill: true,
+ borderWidth: 2,
+ pointRadius: 0,
+ tension: 0.3,
+ }]
+ },
+ options: breadthChartOpts('Composite Score', 0, 100, v => v + '%'),
+ plugins: [breadthThresholdPlugin([{val:60, color:'#10b981', label:'Bull 60%'},{val:40, color:'#f59e0b', label:'Caution 40%'}])]
+ });
+}
+
+function renderBreadthSmaChart(h) {
+ const ctx = document.getElementById('breadthSmaChart');
+ if (!ctx) return;
+ new Chart(ctx.getContext('2d'), {
+ type: 'line',
+ data: {
+ labels: h.dates,
+ datasets: [
+ { label: '% Above SMA21', data: h.pct_above_sma21.map(v => v !== null ? v * 100 : null), borderColor: '#22d3ee', borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+ { label: '% Above SMA200', data: h.pct_above_sma200.map(v => v !== null ? v * 100 : null), borderColor: '#f59e0b', borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+ { label: 'Advance %', data: h.advance_pct.map(v => v !== null ? v * 100 : null), borderColor: '#94a3b8', borderWidth: 1, borderDash: [3,3], pointRadius: 0, tension: 0.3, fill: false },
+ ]
+ },
+ options: breadthChartOpts('% Above SMAs', 0, 100, v => v + '%'),
+ plugins: [breadthThresholdPlugin([{val:50, color:'#f59e0b88', label:'50%'}])]
+ });
+}
+
+function renderBreadthAdRsiChart(h) {
+ const ctx = document.getElementById('breadthAdRsiChart');
+ if (!ctx) return;
+ new Chart(ctx.getContext('2d'), {
+ type: 'line',
+ data: {
+ labels: h.dates,
+ datasets: [
+ { label: 'A/D Ratio', data: h.adv_dec_ratio, borderColor: '#10b981', borderWidth: 1.5, pointRadius: 0, tension: 0.3, yAxisID: 'y' },
+ { label: 'Avg RSI', data: h.avg_rsi, borderColor: '#f97316', borderWidth: 1.5, pointRadius: 0, tension: 0.3, yAxisID: 'y1' },
+ ]
+ },
+ options: {
+ responsive: true,
+ maintainAspectRatio: false,
+ plugins: { legend: { labels: { color: '#94a3b8', font: { size: 9 } } } },
+ scales: {
+ x: { ticks: { color: '#64748b', maxTicksLimit: 6, font: { size: 9 } }, grid: { color: '#1e293b' } },
+ y: { position: 'left', title: { display: true, text: 'A/D Ratio', color: '#10b981', font: { size: 9 } }, ticks: { color: '#64748b', font: { size: 9 } }, grid: { color: '#1e293b' } },
+ y1: { position: 'right', title: { display: true, text: 'Avg RSI', color: '#f97316', font: { size: 9 } }, min: 20, max: 80, ticks: { color: '#64748b', font: { size: 9 } }, grid: { drawOnChartArea: false } },
+ }
+ }
+ });
+}
+
+function renderBreadthMomentumChart(h) {
+ const ctx = document.getElementById('breadthMomentumChart');
+ if (!ctx) return;
+ new Chart(ctx.getContext('2d'), {
+ type: 'line',
+ data: {
+ labels: h.dates,
+ datasets: [
+ { label: '% Near High', data: h.new_highs_pct.map(v => v !== null ? v * 100 : null), borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.08)', fill: true, borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+ { label: '% Strong Mom (>10%)', data: h.pct_strong_mom.map(v => v !== null ? v * 100 : null), borderColor: '#22d3ee', borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+ { label: '% Weak Mom (<-10%)', data: h.pct_weak_mom.map(v => v !== null ? v * 100 : null), borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.06)', fill: true, borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+ ]
+ },
+ options: breadthChartOpts('Momentum Breadth', 0, null, v => v + '%')
+ });
+}
+
+function breadthChartOpts(title, minY, maxY, tickCb) {
+ return {
+ responsive: true,
+ maintainAspectRatio: false,
+ plugins: { legend: { labels: { color: '#94a3b8', font: { size: 9 } } } },
+ scales: {
+ x: { ticks: { color: '#64748b', maxTicksLimit: 6, font: { size: 9 } }, grid: { color: '#1e293b' } },
+ y: {
+ min: minY, max: maxY,
+ ticks: { color: '#64748b', font: { size: 9 }, callback: tickCb },
+ grid: { color: '#1e293b' },
+ },
+ }
+ }
+}
+
+function breadthThresholdPlugin(thresholds) {
+ return {
+ id: 'breadthThresholds',
+ beforeDraw: function(chart) {
+ const ctx = chart.ctx;
+ const yScale = chart.scales.y;
+ const xScale = chart.scales.x;
+ ctx.save();
+ for (const t of thresholds) {
+ const y = yScale.getPixelForValue(t.val);
+ if (y < yScale.top || y > yScale.bottom) continue;
+ ctx.strokeStyle = t.color + '66';
+ ctx.lineWidth = 1;
+ ctx.setLineDash([4, 4]);
+ ctx.beginPath();
+ ctx.moveTo(xScale.left, y);
+ ctx.lineTo(xScale.right, y);
+ ctx.stroke();
+ ctx.fillStyle = t.color;
+ ctx.font = '9px system-ui';
+ ctx.fillText(t.label, xScale.right - ctx.measureText(t.label).width - 4, y - 4);
+ }
+ ctx.restore();
+ }
+ };
+}
+
+// ===== MARKET HEALTH INTERPRETATION =====
+function renderHealthInterp(d) {
+ const m = d.market_status;
+ const s = d.strategy_summary;
+ const h = d.health_interpretation || {};
+ const n_t1_dip = s.n_t1_dip;
+ const n_t1_mom = s.n_t1_mom;
+ const n_t1_all = n_t1_dip + n_t1_mom;
+ const n_t2 = s.n_t2;
+ const n_t3 = s.n_t3;
+ const breadth = m.breadth;
+ const vix = m.vix || 0;
+ const regime = m.regime;
+
+ // Health score
+ const healthScore = n_t1_all * 3 + n_t2 * 2 + n_t3 * 1 + ({STRONG_UP:2,UP:1,WEAK:0}[regime]||0) * 5;
+ const qualPct = s.total_qualifying > 0 ? ((n_t1_all + n_t2 + n_t3) / s.total_tech_stocks * 100).toFixed(1) : '0.0';
+
+ // Determine verdict
+ let verdict, verdictClass, verdictIcon, verdictTitle, verdictBody;
+ if (regime === 'STRONG_UP' && n_t1_dip > 0) {
+  verdictClass = 'bullish';
+  verdictIcon = '\u2705';
+  verdictTitle = 'BULLISH — Dip-Buy Signals Active';
+  verdictBody = '<strong>' + n_t1_dip + ' T1_DIP stock' + (n_t1_dip>1?'s':'') + ' active.</strong> Historically, when T1_DIP > 0, SPY 21-day forward averages <strong>+3.6% with 90% WR</strong> (vs +1.1% / 68% WR otherwise). At 63 days: <strong>+9.3% with 94% WR</strong>. This is the highest-conviction market health signal — the uptrend is confirmed AND leader stocks are offering dip entries.';
+ } else if (regime === 'STRONG_UP' && n_t1_all > 3) {
+  verdictClass = 'bullish';
+  verdictIcon = '\u2705';
+  verdictTitle = 'BULLISH — Strong Leader Momentum';
+  verdictBody = '<strong>' + n_t1_all + ' T1 stocks active.</strong> Leader theme momentum is strong with ' + n_t1_mom + ' momentum stocks. While no dip-buy signals are firing (all leader stocks have RSI > 55), the regime is healthy. T1_ALL > 0 historically implies SPY 63-day forward of <strong>+5.3% with 79% WR</strong>.';
+ } else if (regime === 'STRONG_UP' && n_t1_all === 0) {
+  verdictClass = 'neutral';
+  verdictIcon = '\u26A0\uFE0F';
+  verdictTitle = 'NEUTRAL — Strong Breadth, No T1 Signals';
+  verdictBody = 'Breadth is above 70% (STRONG_UP), but <strong>no leader stocks meet T1 criteria.</strong> This typically happens at market peaks when all leader stocks are overbought (RSI > 55, no dip). Historically, high breadth alone has <strong>negative correlation</strong> with forward SPY returns (r = -0.14 at 63d) because it often coincides with tops. Wait for T1_DIP signals before adding aggressive exposure.';
+ } else if (regime === 'UP' && n_t3 > 0) {
+  verdictClass = 'caution';
+  verdictIcon = '\u26A0\uFE0F';
+  verdictTitle = 'CAUTION — Weakening Breadth, Defensive Only';
+  verdictBody = 'Breadth has dropped to ' + breadth.toFixed(0) + '% (UP regime). <strong>T1 and T2 are inactive</strong> — they require STRONG_UP (breadth > 70%). Only T3 defensive/MAG7 stocks qualify. This pattern historically appears <strong>before and during drawdowns</strong>. In every major crash (COVID, 2022, 2025), tier counts went to zero as breadth fell below 70%. Reduce exposure to 50%.';
+ } else if (regime === 'UP' && n_t3 === 0) {
+  verdictClass = 'caution';
+  verdictIcon = '\u26A0\uFE0F';
+  verdictTitle = 'CAUTION — Weakening Breadth, No Signals';
+  verdictBody = 'Breadth at ' + breadth.toFixed(0) + '% (UP regime) but <strong>no stocks meet any tier criteria.</strong> This is rare — it means even MAG7 defensive stocks don\'t qualify. The market is deteriorating. If breadth drops below 50%, regime becomes WEAK (crash mode). If VIX is rising, risk of further decline is high.';
+ } else if (regime === 'WEAK') {
+  verdictClass = 'danger';
+  verdictIcon = '\uD83D\uDED1';
+  verdictTitle = 'DANGER — Crash Mode, No Signals';
+  verdictBody = 'Breadth at ' + breadth.toFixed(0) + '% (WEAK regime). <strong>All tiers = 0.</strong> This is the crash signature — in every major SPY drawdown > 10%, tier counts were zero. ' +
+   (vix > 30 ? 'VIX at ' + vix.toFixed(0) + ' confirms extreme stress. ' : 'VIX at ' + vix.toFixed(0) + '. ') +
+   '<strong>Recovery signal:</strong> Watch for breadth crossing back above 70% AND T1_ALL > 0. The WEAK\u2192STRONG_UP transition has <strong>92% WR at 21d</strong> (but only 12 occurrences in 11 years). Stay at 15% exposure (MAG7 defensive only).';
+ } else {
+  verdictClass = 'neutral';
+  verdictIcon = '\u2753';
+  verdictTitle = 'NEUTRAL — Mixed Signals';
+  verdictBody = 'Market conditions are transitional. Monitor breadth direction and tier count changes for clarity.';
+ }
+
+ // Stat cards
+ let html = '<div class="health-grid">' +
+  healthStat(healthScore, 'Health Score', 'T1\u00D73+T2\u00D72+T3\u00D71+Regime\u00D75', healthScore >= 12 ? 'var(--green)' : healthScore >= 5 ? 'var(--yellow)' : 'var(--red)') +
+  healthStat(qualPct + '%', 'Qualifying %', 'of ' + s.total_tech_stocks + ' tech stocks', parseFloat(qualPct) > 10 ? 'var(--green)' : parseFloat(qualPct) > 3 ? 'var(--yellow)' : 'var(--red)') +
+  healthStat(n_t1_all, 'T1_ALL Active', n_t1_dip + ' DIP + ' + n_t1_mom + ' MOM', n_t1_all > 0 ? 'var(--green)' : 'var(--red)') +
+  healthStat(h.t1_dip_pct_on + '%', 'T1_DIP Active Days', 'historically ' + h.t1_dip_pct_on + '% of trading days', n_t1_dip > 0 ? 'var(--green)' : 'var(--dim)') +
+  '</div>';
+
+ // Verdict box
+ html += '<div class="health-verdict ' + verdictClass + '">' +
+  '<div class="hv-icon">' + verdictIcon + '</div>' +
+  '<div><div class="hv-title">' + verdictTitle + '</div>' +
+  '<div class="hv-body">' + verdictBody + '</div></div></div>';
+
+ // Historical context cards
+ html += '<div class="health-hist">' +
+  '<div class="health-hist-card">' +
+  '<div class="hhc-title">Historical Signal Reliability</div>' +
+  hhcRow('T1_DIP > 0 \u2192 SPY 21d', '+3.6%', '90% WR', 'var(--green)') +
+  hhcRow('T1_DIP > 0 \u2192 SPY 63d', '+9.3%', '94% WR', 'var(--green)') +
+  hhcRow('T1_DIP surge \u2192 SPY 63d', '+12.7%', '100% WR', 'var(--accent)') +
+  hhcRow('T1_ALL > 0 \u2192 SPY 63d', '+5.3%', '79% WR', 'var(--accent)') +
+  hhcRow('T1_ALL = 0 \u2192 SPY 63d', '+3.4%', '75% WR', 'var(--yellow)') +
+  hhcRow('WEAK\u2192STRONG_UP \u2192 SPY 21d', '+4.0%', '92% WR', 'var(--green)') +
+  '</div>' +
+  '<div class="health-hist-card">' +
+  '<div class="hhc-title">Crash Signature (All Episodes)</div>' +
+  hhcRow('During crash: T1_ALL', '0', 'always', 'var(--red)') +
+  hhcRow('During crash: T2', '0', 'always', 'var(--red)') +
+  hhcRow('During crash: Breadth', '< 50%', 'always', 'var(--red)') +
+  hhcRow('After crash: T3 recovers', 'first', '1-4 weeks', 'var(--yellow)') +
+  hhcRow('Recovery: Breadth > 70%', 'required', '1-6 months', 'var(--accent)') +
+  hhcRow('Recovery: T1_ALL > 0', 'confirms', 'with breadth', 'var(--green)') +
+  '</div>' +
+  '</div>';
+
+ document.getElementById('healthInterpretation').innerHTML = html;
+}
+
+function healthStat(val, lbl, sub, color) {
+ return '<div class="health-stat"><div class="hs-val" style="color:' + color + '">' + val + '</div><div class="hs-lbl">' + lbl + '</div><div class="hs-sub">' + sub + '</div></div>';
+}
+function hhcRow(key, val, note, color) {
+ return '<div class="hhc-row"><span style="color:var(--muted)">' + key + '</span><span class="hhc-val" style="color:' + color + '">' + val + ' <span style="color:var(--dim);font-weight:400;font-size:0.75rem">(' + note + ')</span></span></div>';
+}
+
+</script>
+</body>
+</html>
