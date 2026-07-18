@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-07-17T19:25:24.265186",
-  "date": "2026-07-16",
+  "generated_at": "2026-07-18T19:08:48.770629",
+  "date": "2026-07-17",
   "data_freshness": {
     "is_stale": false,
     "days_behind": 1,
-    "today": "2026-07-17"
+    "today": "2026-07-18"
   },
   "market_status": {
     "regime": "WEAK",
     "regime_display": "WEAK",
-    "breadth": 37.3,
-    "vix": 16.7,
-    "spy_price": 750.72,
-    "spy_sma50": 743.76,
-    "spy_sma200": 694.56,
-    "spy_trend": "Bullish",
+    "breadth": 32.0,
+    "vix": 18.8,
+    "spy_price": 743.29,
+    "spy_sma50": 744.15,
+    "spy_sma200": 694.98,
+    "spy_trend": "Neutral",
     "exposure": 0.15,
     "exposure_pct": 15
   },
@@ -24,7 +24,7 @@
     "theme_ranking": [
       {
         "theme": "Internet",
-        "ret_21d": 4.0,
+        "ret_21d": 3.8,
         "is_leader": true,
         "is_runner": false,
         "n_qualifying": 0,
@@ -32,31 +32,31 @@
       },
       {
         "theme": "Software",
-        "ret_21d": -0.1,
+        "ret_21d": -0.8,
         "is_leader": false,
         "is_runner": true,
         "n_qualifying": 0,
         "n_total": 21
       },
       {
-        "theme": "IT Services",
-        "ret_21d": -6.8,
-        "is_leader": false,
-        "is_runner": false,
-        "n_qualifying": 0,
-        "n_total": 5
-      },
-      {
         "theme": "Hardware",
-        "ret_21d": -9.2,
+        "ret_21d": -7.2,
         "is_leader": false,
         "is_runner": false,
         "n_qualifying": 1,
         "n_total": 26
       },
       {
+        "theme": "IT Services",
+        "ret_21d": -8.5,
+        "is_leader": false,
+        "is_runner": false,
+        "n_qualifying": 0,
+        "n_total": 5
+      },
+      {
         "theme": "Semiconductors",
-        "ret_21d": -17.3,
+        "ret_21d": -13.5,
         "is_leader": false,
         "is_runner": false,
         "n_qualifying": 1,
@@ -66,17 +66,17 @@
   },
   "sub_industry_ranking": [
     {
-      "sub_ind": "Data Processing & Outsourced Services",
-      "theme": "IT Services",
-      "avg_ret_21d": 7.0,
+      "sub_ind": "Consumer Electronics",
+      "theme": "Hardware",
+      "avg_ret_21d": 6.0,
       "n_qualifying": 0,
       "n_total": 1,
       "is_leader_theme": false
     },
     {
-      "sub_ind": "Consumer Electronics",
-      "theme": "Hardware",
-      "avg_ret_21d": 5.2,
+      "sub_ind": "Data Processing & Outsourced Services",
+      "theme": "IT Services",
+      "avg_ret_21d": 4.1,
       "n_qualifying": 0,
       "n_total": 1,
       "is_leader_theme": false
@@ -84,7 +84,7 @@
     {
       "sub_ind": "Internet Services & Infrastructure",
       "theme": "Internet",
-      "avg_ret_21d": 3.4,
+      "avg_ret_21d": 3.3,
       "n_qualifying": 0,
       "n_total": 3,
       "is_leader_theme": true
@@ -92,7 +92,7 @@
     {
       "sub_ind": "Electronic Equipment & Instruments",
       "theme": "Hardware",
-      "avg_ret_21d": 1.6,
+      "avg_ret_21d": 2.5,
       "n_qualifying": 0,
       "n_total": 4,
       "is_leader_theme": false
@@ -100,7 +100,7 @@
     {
       "sub_ind": "Application Software",
       "theme": "Software",
-      "avg_ret_21d": 0.4,
+      "avg_ret_21d": -1.0,
       "n_qualifying": 0,
       "n_total": 15,
       "is_leader_theme": false
@@ -108,23 +108,7 @@
     {
       "sub_ind": "Communications Equipment",
       "theme": "Hardware",
-      "avg_ret_21d": -9.2,
-      "n_qualifying": 0,
-      "n_total": 6,
-      "is_leader_theme": false
-    },
-    {
-      "sub_ind": "IT Consulting & Other Services",
-      "theme": "IT Services",
-      "avg_ret_21d": -11.7,
-      "n_qualifying": 0,
-      "n_total": 4,
-      "is_leader_theme": false
-    },
-    {
-      "sub_ind": "Systems Software",
-      "theme": "Software",
-      "avg_ret_21d": -13.8,
+      "avg_ret_21d": -5.1,
       "n_qualifying": 0,
       "n_total": 6,
       "is_leader_theme": false
@@ -132,41 +116,57 @@
     {
       "sub_ind": "Technology Hardware, Storage & Peripherals",
       "theme": "Hardware",
-      "avg_ret_21d": -14.6,
+      "avg_ret_21d": -12.5,
       "n_qualifying": 1,
       "n_total": 9,
       "is_leader_theme": false
     },
     {
-      "sub_ind": "Electronic Manufacturing Services",
-      "theme": "Hardware",
-      "avg_ret_21d": -16.7,
+      "sub_ind": "Systems Software",
+      "theme": "Software",
+      "avg_ret_21d": -12.7,
       "n_qualifying": 0,
-      "n_total": 3,
+      "n_total": 6,
+      "is_leader_theme": false
+    },
+    {
+      "sub_ind": "IT Consulting & Other Services",
+      "theme": "IT Services",
+      "avg_ret_21d": -13.2,
+      "n_qualifying": 0,
+      "n_total": 4,
       "is_leader_theme": false
     },
     {
       "sub_ind": "Semiconductor Materials & Equipment",
       "theme": "Semiconductors",
-      "avg_ret_21d": -17.1,
+      "avg_ret_21d": -13.8,
       "n_qualifying": 0,
       "n_total": 5,
       "is_leader_theme": false
     },
     {
-      "sub_ind": "Electronic Components",
+      "sub_ind": "Semiconductors",
+      "theme": "Semiconductors",
+      "avg_ret_21d": -15.8,
+      "n_qualifying": 1,
+      "n_total": 15,
+      "is_leader_theme": false
+    },
+    {
+      "sub_ind": "Electronic Manufacturing Services",
       "theme": "Hardware",
-      "avg_ret_21d": -20.2,
+      "avg_ret_21d": -16.5,
       "n_qualifying": 0,
       "n_total": 3,
       "is_leader_theme": false
     },
     {
-      "sub_ind": "Semiconductors",
-      "theme": "Semiconductors",
-      "avg_ret_21d": -20.7,
-      "n_qualifying": 1,
-      "n_total": 15,
+      "sub_ind": "Electronic Components",
+      "theme": "Hardware",
+      "avg_ret_21d": -16.9,
+      "n_qualifying": 0,
+      "n_total": 3,
       "is_leader_theme": false
     }
   ],
@@ -176,13 +176,13 @@
       "name": "GoDaddy",
       "theme": "Internet",
       "sub_ind": "Internet Services & Infrastructure",
-      "price": 96.20999908447266,
-      "rsi": 68.2,
+      "price": 94.3499984741211,
+      "rsi": 63.7,
       "vol63": 0.462,
-      "ret_21d": 21.6,
-      "ret_5d": 9.1,
-      "ret_63d": 15.6,
-      "dd_from_63d_high": null,
+      "ret_21d": 18.0,
+      "ret_5d": 5.9,
+      "ret_63d": 11.3,
+      "dd_from_63d_high": -1.9,
       "atr_pct": 3.9,
       "above_50d": true,
       "above_200d": false,
@@ -196,13 +196,13 @@
       "name": "Verisign",
       "theme": "Internet",
       "sub_ind": "Internet Services & Infrastructure",
-      "price": 275.2200012207031,
-      "rsi": 57.8,
+      "price": 277.6600036621094,
+      "rsi": 60.2,
       "vol63": 0.301,
-      "ret_21d": 0.8,
-      "ret_5d": 1.9,
-      "ret_63d": 0.3,
-      "dd_from_63d_high": -11.2,
+      "ret_21d": 1.4,
+      "ret_5d": 2.8,
+      "ret_63d": 1.6,
+      "dd_from_63d_high": -10.4,
       "atr_pct": 2.4,
       "above_50d": false,
       "above_200d": true,
@@ -216,14 +216,14 @@
       "name": "Akamai Technologies",
       "theme": "Internet",
       "sub_ind": "Internet Services & Infrastructure",
-      "price": 118.80999755859375,
-      "rsi": 43.4,
-      "vol63": 0.737,
-      "ret_21d": -12.2,
-      "ret_5d": -8.6,
-      "ret_63d": 27.4,
-      "dd_from_63d_high": -26.3,
-      "atr_pct": 5.0,
+      "price": 120.19000244140625,
+      "rsi": 45.2,
+      "vol63": 0.725,
+      "ret_21d": -9.6,
+      "ret_5d": -4.9,
+      "ret_63d": 21.6,
+      "dd_from_63d_high": -25.4,
+      "atr_pct": 4.9,
       "above_50d": false,
       "above_200d": true,
       "is_leader": true,
@@ -261,14 +261,14 @@
           "name": "Apple Inc.",
           "theme": "Hardware",
           "sub_ind": "Technology Hardware, Storage & Peripherals",
-          "price": 333.260009765625,
-          "rsi": 71.4,
-          "vol63": 0.285,
-          "ret_21d": 11.7,
-          "ret_5d": 5.2,
-          "ret_63d": 22.5,
+          "price": 333.739990234375,
+          "rsi": 71.7,
+          "vol63": 0.284,
+          "ret_21d": 10.9,
+          "ret_5d": 5.7,
+          "ret_63d": 23.8,
           "dd_from_63d_high": null,
-          "atr_pct": 2.6,
+          "atr_pct": 2.5,
           "above_50d": true,
           "above_200d": true,
           "is_leader": false,
@@ -281,14 +281,14 @@
           "name": "Nvidia",
           "theme": "Semiconductors",
           "sub_ind": "Semiconductors",
-          "price": 207.39999389648438,
-          "rsi": 52.1,
-          "vol63": 0.412,
-          "ret_21d": -2.4,
-          "ret_5d": 2.3,
-          "ret_63d": 4.3,
-          "dd_from_63d_high": -11.9,
-          "atr_pct": 3.4,
+          "price": 202.80999755859375,
+          "rsi": 48.2,
+          "vol63": 0.415,
+          "ret_21d": -2.2,
+          "ret_5d": -3.9,
+          "ret_63d": 2.3,
+          "dd_from_63d_high": -13.9,
+          "atr_pct": 3.6,
           "above_50d": false,
           "above_200d": true,
           "is_leader": false,
@@ -305,14 +305,14 @@
       "name": "Apple Inc.",
       "theme": "Hardware",
       "sub_ind": "Technology Hardware, Storage & Peripherals",
-      "price": 333.260009765625,
-      "rsi": 71.4,
-      "vol63": 0.285,
-      "ret_21d": 11.7,
-      "ret_5d": 5.2,
-      "ret_63d": 22.5,
+      "price": 333.739990234375,
+      "rsi": 71.7,
+      "vol63": 0.284,
+      "ret_21d": 10.9,
+      "ret_5d": 5.7,
+      "ret_63d": 23.8,
       "dd_from_63d_high": null,
-      "atr_pct": 2.6,
+      "atr_pct": 2.5,
       "above_50d": true,
       "above_200d": true,
       "is_leader": false,
@@ -327,14 +327,14 @@
       "name": "Nvidia",
       "theme": "Semiconductors",
       "sub_ind": "Semiconductors",
-      "price": 207.39999389648438,
-      "rsi": 52.1,
-      "vol63": 0.412,
-      "ret_21d": -2.4,
-      "ret_5d": 2.3,
-      "ret_63d": 4.3,
-      "dd_from_63d_high": -11.9,
-      "atr_pct": 3.4,
+      "price": 202.80999755859375,
+      "rsi": 48.2,
+      "vol63": 0.415,
+      "ret_21d": -2.2,
+      "ret_5d": -3.9,
+      "ret_63d": 2.3,
+      "dd_from_63d_high": -13.9,
+      "atr_pct": 3.6,
       "above_50d": false,
       "above_200d": true,
       "is_leader": false,
@@ -347,7 +347,6 @@
   ],
   "breadth_history": {
     "dates": [
-      "2026-04-21",
       "2026-04-22",
       "2026-04-23",
       "2026-04-24",
@@ -406,10 +405,10 @@
       "2026-07-13",
       "2026-07-14",
       "2026-07-15",
-      "2026-07-16"
+      "2026-07-16",
+      "2026-07-17"
     ],
     "values": [
-      80.0,
       84.0,
       69.33333333333334,
       74.66666666666667,
@@ -468,7 +467,8 @@
       38.666666666666664,
       42.66666666666667,
       34.66666666666667,
-      37.333333333333336
+      37.333333333333336,
+      32.0
     ]
   },
   "recent_regime_history": [
@@ -635,23 +635,23 @@
   ],
   "sp500_breadth": {
     "current": {
-      "advance_pct": 0.73558648111332,
-      "pct_above_sma21": 0.610337972166998,
-      "pct_above_sma200": 0.5984095427435387,
-      "pct_trending": 0.28429423459244535,
-      "pct_vol_high": 0.7276341948310139,
-      "pct_macd_bull": 0.4831013916500994,
-      "avg_rsi": 54.853691555910736,
-      "pct_rsi_ob": 0.0636182902584493,
-      "pct_rsi_os": 0.007952286282306162,
-      "new_highs_pct": 0.18091451292246521,
-      "new_lows_pct": 0.073558648111332,
-      "pct_strong_mom": 0.147117296222664,
-      "pct_weak_mom": 0.09940357852882704,
-      "breadth_composite": 0.5487707469219301,
+      "advance_pct": 0.2922465208747515,
+      "pct_above_sma21": 0.5984095427435387,
+      "pct_above_sma200": 0.6023856858846919,
+      "pct_trending": 0.28628230616302186,
+      "pct_vol_high": 0.7296222664015904,
+      "pct_macd_bull": 0.4711729622266402,
+      "avg_rsi": 52.89667710830089,
+      "pct_rsi_ob": 0.05168986083499006,
+      "pct_rsi_os": 0.013916500994035786,
+      "new_highs_pct": 0.13916500994035785,
+      "new_lows_pct": 0.08548707753479125,
+      "pct_strong_mom": 0.1073558648111332,
+      "pct_weak_mom": 0.11133200795228629,
+      "breadth_composite": 0.4664624949496099,
       "breadth_regime": "Recovery",
-      "adv_dec_ratio": 2.781954887218045,
-      "adv_dec_line": 72032.0,
+      "adv_dec_ratio": 0.4117647058823529,
+      "adv_dec_line": 71823.0,
       "is_capitulation": 0,
       "is_euphoria": 0,
       "is_bearish_divergence": 0,
@@ -659,7 +659,6 @@
     },
     "history_120d": {
       "dates": [
-        "2026-01-23",
         "2026-01-26",
         "2026-01-27",
         "2026-01-28",
@@ -778,10 +777,10 @@
         "2026-07-13",
         "2026-07-14",
         "2026-07-15",
-        "2026-07-16"
+        "2026-07-16",
+        "2026-07-17"
       ],
       "advance_pct": [
-        0.36237623762376237,
         0.6297029702970297,
         0.4752475247524752,
         0.38415841584158417,
@@ -900,10 +899,10 @@
         0.5427435387673957,
         0.40357852882703776,
         0.510934393638171,
-        0.73558648111332
+        0.73558648111332,
+        0.2922465208747515
       ],
       "pct_above_sma21": [
-        0.6099009900990099,
         0.5841584158415841,
         0.6059405940594059,
         0.5861386138613861,
@@ -1022,10 +1021,10 @@
         0.6282306163021869,
         0.5924453280318092,
         0.5964214711729622,
-        0.610337972166998
+        0.610337972166998,
+        0.5984095427435387
       ],
       "pct_above_sma200": [
-        0.6158415841584158,
         0.6138613861386139,
         0.6118811881188119,
         0.6118811881188119,
@@ -1144,10 +1143,10 @@
         0.5984095427435387,
         0.6003976143141153,
         0.5944333996023857,
-        0.5984095427435387
+        0.5984095427435387,
+        0.6023856858846919
       ],
       "avg_rsi": [
-        53.51323475158437,
         54.17023073445845,
         53.593614794638924,
         52.009597575934905,
@@ -1266,10 +1265,10 @@
         53.90223504478526,
         52.45719679187939,
         52.06998159197376,
-        54.853691555910736
+        54.853691555910736,
+        52.89667710830089
       ],
       "adv_dec_ratio": [
-        0.5683229813664596,
         1.6914893617021276,
         0.9022556390977443,
         0.6217948717948718,
@@ -1388,10 +1387,10 @@
         1.1818181818181819,
         0.6812080536912751,
         1.040485829959514,
-        2.781954887218045
+        2.781954887218045,
+        0.4117647058823529
       ],
       "breadth_composite": [
-        0.5109141009326189,
         0.5526730831732757,
         0.5269789629884084,
         0.4991465719243516,
@@ -1510,10 +1509,10 @@
         0.5249217154159874,
         0.48445974147512333,
         0.4966379541681179,
-        0.5487707469219301
+        0.5487707469219301,
+        0.4664624949496099
       ],
       "pct_trending": [
-        0.42178217821782177,
         0.4099009900990099,
         0.42178217821782177,
         0.4396039603960396,
@@ -1632,10 +1631,10 @@
         0.2922465208747515,
         0.2882703777335984,
         0.28628230616302186,
-        0.28429423459244535
+        0.28429423459244535,
+        0.28628230616302186
       ],
       "pct_vol_high": [
-        0.26534653465346536,
         0.26732673267326734,
         0.31287128712871287,
         0.3465346534653465,
@@ -1754,10 +1753,10 @@
         0.6998011928429424,
         0.6819085487077535,
         0.6898608349900597,
-        0.7276341948310139
+        0.7276341948310139,
+        0.7296222664015904
       ],
       "new_highs_pct": [
-        0.1603960396039604,
         0.16633663366336635,
         0.2079207920792079,
         0.1900990099009901,
@@ -1876,10 +1875,10 @@
         0.1411530815109344,
         0.13518886679920478,
         0.10934393638170974,
-        0.18091451292246521
+        0.18091451292246521,
+        0.13916500994035785
       ],
       "new_lows_pct": [
-        0.0297029702970297,
         0.031683168316831684,
         0.03762376237623762,
         0.039603960396039604,
@@ -1998,10 +1997,10 @@
         0.07157057654075547,
         0.07554671968190854,
         0.073558648111332,
-        0.073558648111332
+        0.073558648111332,
+        0.08548707753479125
       ],
       "pct_strong_mom": [
-        0.13465346534653466,
         0.13861386138613863,
         0.1485148514851485,
         0.15445544554455445,
@@ -2120,10 +2119,10 @@
         0.147117296222664,
         0.1172962226640159,
         0.08548707753479125,
-        0.147117296222664
+        0.147117296222664,
+        0.1073558648111332
       ],
       "pct_weak_mom": [
-        0.07524752475247524,
         0.06336633663366337,
         0.08712871287128712,
         0.10297029702970296,
@@ -2242,12 +2241,13 @@
         0.0636182902584493,
         0.0874751491053678,
         0.10337972166998012,
-        0.09940357852882704
+        0.09940357852882704,
+        0.11133200795228629
       ]
     },
     "regime_distribution_1y": {
-      "Recovery": 225,
-      "Bull": 22,
+      "Recovery": 226,
+      "Bull": 21,
       "Bear": 3,
       "Caution": 2
     },
@@ -2291,7 +2291,6 @@
   },
   "strategy_history": {
     "dates": [
-      "2024-07-08",
       "2024-07-22",
       "2024-08-05",
       "2024-08-19",
@@ -2350,7 +2349,8 @@
       "2026-07-10",
       "2026-07-13",
       "2026-07-14",
-      "2026-07-15"
+      "2026-07-15",
+      "2026-07-16"
     ],
     "t1_dip": [
       0,
@@ -2541,7 +2541,6 @@
     "t3": [
       0,
       0,
-      0,
       2,
       2,
       1,
@@ -2598,10 +2597,10 @@
       2,
       2,
       2,
+      2,
       2
     ],
     "breadth_composite": [
-      0.72,
       0.72,
       0.32,
       0.56,
@@ -2660,11 +2659,11 @@
       0.5514358983513147,
       0.5249217154159874,
       0.48445974147512333,
-      0.4966379541681179
+      0.4966379541681179,
+      0.5487707469219301
     ],
     "regime": [
       "STRONG_UP",
-      "STRONG_UP",
       "WEAK",
       "UP",
       "WEAK",
@@ -2716,6 +2715,7 @@
       "WEAK",
       "WEAK",
       "UP",
+      "WEAK",
       "WEAK",
       "WEAK",
       "WEAK",
