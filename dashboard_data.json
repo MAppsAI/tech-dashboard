@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-07-29T19:12:34.621777",
-  "date": "2026-07-28",
+  "generated_at": "2026-07-30T19:08:30.758358",
+  "date": "2026-07-29",
   "data_freshness": {
     "is_stale": false,
     "days_behind": 1,
-    "today": "2026-07-29"
+    "today": "2026-07-30"
   },
   "market_status": {
     "regime": "WEAK",
     "regime_display": "WEAK",
-    "breadth": 44.0,
-    "vix": 18.2,
-    "spy_price": 740.86,
-    "spy_sma50": 744.63,
-    "spy_sma200": 697.65,
+    "breadth": 38.7,
+    "vix": 20.7,
+    "spy_price": 729.46,
+    "spy_sma50": 744.43,
+    "spy_sma200": 697.96,
     "spy_trend": "Neutral",
     "exposure": 0.15,
     "exposure_pct": 15
@@ -24,7 +24,7 @@
     "theme_ranking": [
       {
         "theme": "IT Services",
-        "ret_21d": 13.0,
+        "ret_21d": 20.0,
         "is_leader": true,
         "is_runner": false,
         "n_qualifying": 0,
@@ -32,7 +32,7 @@
       },
       {
         "theme": "Internet",
-        "ret_21d": 10.4,
+        "ret_21d": 11.0,
         "is_leader": false,
         "is_runner": true,
         "n_qualifying": 0,
@@ -40,7 +40,7 @@
       },
       {
         "theme": "Software",
-        "ret_21d": 3.3,
+        "ret_21d": 3.4,
         "is_leader": false,
         "is_runner": false,
         "n_qualifying": 0,
@@ -48,7 +48,7 @@
       },
       {
         "theme": "Hardware",
-        "ret_21d": -6.5,
+        "ret_21d": -11.2,
         "is_leader": false,
         "is_runner": false,
         "n_qualifying": 1,
@@ -56,51 +56,51 @@
       },
       {
         "theme": "Semiconductors",
-        "ret_21d": -15.0,
+        "ret_21d": -21.2,
         "is_leader": false,
         "is_runner": false,
-        "n_qualifying": 1,
+        "n_qualifying": 0,
         "n_total": 20
       }
     ]
   },
   "sub_industry_ranking": [
     {
-      "sub_ind": "Data Processing & Outsourced Services",
-      "theme": "IT Services",
-      "avg_ret_21d": 13.7,
+      "sub_ind": "Consumer Electronics",
+      "theme": "Hardware",
+      "avg_ret_21d": 23.2,
       "n_qualifying": 0,
       "n_total": 1,
-      "is_leader_theme": true
+      "is_leader_theme": false
     },
     {
       "sub_ind": "IT Consulting & Other Services",
       "theme": "IT Services",
-      "avg_ret_21d": 11.0,
+      "avg_ret_21d": 17.8,
       "n_qualifying": 0,
       "n_total": 4,
       "is_leader_theme": true
     },
     {
+      "sub_ind": "Data Processing & Outsourced Services",
+      "theme": "IT Services",
+      "avg_ret_21d": 16.2,
+      "n_qualifying": 0,
+      "n_total": 1,
+      "is_leader_theme": true
+    },
+    {
       "sub_ind": "Internet Services & Infrastructure",
       "theme": "Internet",
-      "avg_ret_21d": 9.3,
+      "avg_ret_21d": 9.8,
       "n_qualifying": 0,
       "n_total": 3,
       "is_leader_theme": false
     },
     {
-      "sub_ind": "Consumer Electronics",
-      "theme": "Hardware",
-      "avg_ret_21d": 8.7,
-      "n_qualifying": 0,
-      "n_total": 1,
-      "is_leader_theme": false
-    },
-    {
       "sub_ind": "Application Software",
       "theme": "Software",
-      "avg_ret_21d": 6.4,
+      "avg_ret_21d": 7.6,
       "n_qualifying": 0,
       "n_total": 15,
       "is_leader_theme": false
@@ -108,55 +108,55 @@
     {
       "sub_ind": "Electronic Equipment & Instruments",
       "theme": "Hardware",
-      "avg_ret_21d": 5.8,
+      "avg_ret_21d": 3.6,
       "n_qualifying": 0,
       "n_total": 4,
       "is_leader_theme": false
     },
     {
-      "sub_ind": "Communications Equipment",
-      "theme": "Hardware",
-      "avg_ret_21d": -5.6,
-      "n_qualifying": 0,
-      "n_total": 6,
-      "is_leader_theme": false
-    },
-    {
       "sub_ind": "Technology Hardware, Storage & Peripherals",
       "theme": "Hardware",
-      "avg_ret_21d": -6.6,
+      "avg_ret_21d": -10.7,
       "n_qualifying": 1,
       "n_total": 9,
       "is_leader_theme": false
     },
     {
-      "sub_ind": "Electronic Manufacturing Services",
+      "sub_ind": "Communications Equipment",
       "theme": "Hardware",
-      "avg_ret_21d": -11.6,
+      "avg_ret_21d": -13.5,
       "n_qualifying": 0,
-      "n_total": 3,
+      "n_total": 6,
       "is_leader_theme": false
     },
     {
       "sub_ind": "Semiconductors",
       "theme": "Semiconductors",
-      "avg_ret_21d": -13.2,
-      "n_qualifying": 1,
+      "avg_ret_21d": -18.9,
+      "n_qualifying": 0,
       "n_total": 15,
       "is_leader_theme": false
     },
     {
       "sub_ind": "Systems Software",
       "theme": "Software",
-      "avg_ret_21d": -17.0,
+      "avg_ret_21d": -19.8,
       "n_qualifying": 0,
       "n_total": 6,
       "is_leader_theme": false
     },
     {
+      "sub_ind": "Electronic Manufacturing Services",
+      "theme": "Hardware",
+      "avg_ret_21d": -21.9,
+      "n_qualifying": 0,
+      "n_total": 3,
+      "is_leader_theme": false
+    },
+    {
       "sub_ind": "Semiconductor Materials & Equipment",
       "theme": "Semiconductors",
-      "avg_ret_21d": -28.0,
+      "avg_ret_21d": -41.3,
       "n_qualifying": 0,
       "n_total": 5,
       "is_leader_theme": false
@@ -164,7 +164,7 @@
     {
       "sub_ind": "Electronic Components",
       "theme": "Hardware",
-      "avg_ret_21d": -37.9,
+      "avg_ret_21d": -46.4,
       "n_qualifying": 0,
       "n_total": 3,
       "is_leader_theme": false
@@ -172,18 +172,18 @@
   ],
   "leader_stocks": [
     {
-      "ticker": "ACN",
-      "name": "Accenture",
+      "ticker": "CTSH",
+      "name": "Cognizant",
       "theme": "IT Services",
       "sub_ind": "IT Consulting & Other Services",
-      "price": 164.66000366210938,
-      "rsi": 65.8,
-      "vol63": 0.623,
-      "ret_21d": 24.4,
-      "ret_5d": 15.6,
-      "ret_63d": -7.2,
-      "dd_from_63d_high": -16.2,
-      "atr_pct": 4.6,
+      "price": 55.970001220703125,
+      "rsi": 74.6,
+      "vol63": 0.565,
+      "ret_21d": 36.8,
+      "ret_5d": 25.9,
+      "ret_63d": 2.2,
+      "dd_from_63d_high": -2.1,
+      "atr_pct": 4.3,
       "above_50d": true,
       "above_200d": false,
       "is_leader": true,
@@ -192,18 +192,18 @@
       "signal": ""
     },
     {
-      "ticker": "CTSH",
-      "name": "Cognizant",
+      "ticker": "ACN",
+      "name": "Accenture",
       "theme": "IT Services",
       "sub_ind": "IT Consulting & Other Services",
-      "price": 50.310001373291016,
-      "rsi": 65.8,
-      "vol63": 0.522,
-      "ret_21d": 22.9,
-      "ret_5d": 14.2,
-      "ret_63d": -7.5,
-      "dd_from_63d_high": -12.0,
-      "atr_pct": 4.2,
+      "price": 173.1699981689453,
+      "rsi": 70.1,
+      "vol63": 0.631,
+      "ret_21d": 32.8,
+      "ret_5d": 21.2,
+      "ret_63d": -2.6,
+      "dd_from_63d_high": -11.9,
+      "atr_pct": 4.5,
       "above_50d": true,
       "above_200d": false,
       "is_leader": true,
@@ -216,13 +216,13 @@
       "name": "Gartner",
       "theme": "IT Services",
       "sub_ind": "IT Consulting & Other Services",
-      "price": 155.83999633789062,
-      "rsi": 63.1,
-      "vol63": 0.547,
-      "ret_21d": 14.4,
-      "ret_5d": 14.5,
-      "ret_63d": 4.6,
-      "dd_from_63d_high": -13.2,
+      "price": 165.64999389648438,
+      "rsi": 68.3,
+      "vol63": 0.56,
+      "ret_21d": 22.1,
+      "ret_5d": 22.6,
+      "ret_63d": 9.8,
+      "dd_from_63d_high": -7.8,
       "atr_pct": 4.7,
       "above_50d": true,
       "above_200d": false,
@@ -236,14 +236,14 @@
       "name": "Broadridge Financial Solutions",
       "theme": "IT Services",
       "sub_ind": "Data Processing & Outsourced Services",
-      "price": 158.17999267578125,
-      "rsi": 64.7,
-      "vol63": 0.323,
-      "ret_21d": 13.7,
-      "ret_5d": 8.7,
-      "ret_63d": 1.2,
-      "dd_from_63d_high": -1.6,
-      "atr_pct": 3.1,
+      "price": 159.1999969482422,
+      "rsi": 65.7,
+      "vol63": 0.322,
+      "ret_21d": 16.2,
+      "ret_5d": 10.0,
+      "ret_63d": 0.2,
+      "dd_from_63d_high": -1.0,
+      "atr_pct": 3.2,
       "above_50d": true,
       "above_200d": false,
       "is_leader": true,
@@ -256,14 +256,14 @@
       "name": "IBM",
       "theme": "IT Services",
       "sub_ind": "IT Consulting & Other Services",
-      "price": 227.5500030517578,
-      "rsi": 42.6,
-      "vol63": 0.796,
-      "ret_21d": -17.7,
-      "ret_5d": 7.8,
-      "ret_63d": 0.5,
-      "dd_from_63d_high": -30.9,
-      "atr_pct": 6.6,
+      "price": 226.44000244140625,
+      "rsi": 42.2,
+      "vol63": 0.795,
+      "ret_21d": -20.5,
+      "ret_5d": 9.6,
+      "ret_63d": -2.1,
+      "dd_from_63d_high": -31.2,
+      "atr_pct": 6.3,
       "above_50d": false,
       "above_200d": false,
       "is_leader": true,
@@ -301,35 +301,15 @@
           "name": "Apple Inc.",
           "theme": "Hardware",
           "sub_ind": "Technology Hardware, Storage & Peripherals",
-          "price": 340.0799865722656,
-          "rsi": 68.9,
+          "price": 338.19000244140625,
+          "rsi": 66.8,
           "vol63": 0.282,
-          "ret_21d": 18.1,
+          "ret_21d": 18.3,
           "ret_5d": 3.7,
-          "ret_63d": 24.1,
-          "dd_from_63d_high": null,
+          "ret_63d": 22.3,
+          "dd_from_63d_high": -0.6,
           "atr_pct": 2.3,
           "above_50d": true,
-          "above_200d": true,
-          "is_leader": false,
-          "is_mag7": true,
-          "tier": "T3",
-          "signal": "DEFENSIVE \u2014 MAG7"
-        },
-        {
-          "ticker": "NVDA",
-          "name": "Nvidia",
-          "theme": "Semiconductors",
-          "sub_ind": "Semiconductors",
-          "price": 197.00999450683594,
-          "rsi": 43.0,
-          "vol63": 0.413,
-          "ret_21d": 2.3,
-          "ret_5d": -5.1,
-          "ret_63d": -9.4,
-          "dd_from_63d_high": -16.3,
-          "atr_pct": 3.9,
-          "above_50d": false,
           "above_200d": true,
           "is_leader": false,
           "is_mag7": true,
@@ -345,37 +325,15 @@
       "name": "Apple Inc.",
       "theme": "Hardware",
       "sub_ind": "Technology Hardware, Storage & Peripherals",
-      "price": 340.0799865722656,
-      "rsi": 68.9,
+      "price": 338.19000244140625,
+      "rsi": 66.8,
       "vol63": 0.282,
-      "ret_21d": 18.1,
+      "ret_21d": 18.3,
       "ret_5d": 3.7,
-      "ret_63d": 24.1,
-      "dd_from_63d_high": null,
+      "ret_63d": 22.3,
+      "dd_from_63d_high": -0.6,
       "atr_pct": 2.3,
       "above_50d": true,
-      "above_200d": true,
-      "is_leader": false,
-      "is_mag7": true,
-      "tier": "T3",
-      "signal": "DEFENSIVE \u2014 MAG7",
-      "portfolio_tier": "T3",
-      "weight": "low"
-    },
-    {
-      "ticker": "NVDA",
-      "name": "Nvidia",
-      "theme": "Semiconductors",
-      "sub_ind": "Semiconductors",
-      "price": 197.00999450683594,
-      "rsi": 43.0,
-      "vol63": 0.413,
-      "ret_21d": 2.3,
-      "ret_5d": -5.1,
-      "ret_63d": -9.4,
-      "dd_from_63d_high": -16.3,
-      "atr_pct": 3.9,
-      "above_50d": false,
       "above_200d": true,
       "is_leader": false,
       "is_mag7": true,
@@ -387,7 +345,6 @@
   ],
   "breadth_history": {
     "dates": [
-      "2026-05-01",
       "2026-05-04",
       "2026-05-05",
       "2026-05-06",
@@ -446,10 +403,10 @@
       "2026-07-23",
       "2026-07-24",
       "2026-07-27",
-      "2026-07-28"
+      "2026-07-28",
+      "2026-07-29"
     ],
     "values": [
-      73.33333333333333,
       77.33333333333333,
       76.0,
       74.66666666666667,
@@ -508,7 +465,8 @@
       28.000000000000004,
       29.333333333333332,
       38.666666666666664,
-      44.0
+      44.0,
+      38.666666666666664
     ]
   },
   "recent_regime_history": [
@@ -675,23 +633,23 @@
   ],
   "sp500_breadth": {
     "current": {
-      "advance_pct": 0.709741550695825,
-      "pct_above_sma21": 0.588469184890656,
-      "pct_above_sma200": 0.6262425447316103,
-      "pct_trending": 0.268389662027833,
-      "pct_vol_high": 0.6878727634194831,
-      "pct_macd_bull": 0.5566600397614314,
-      "avg_rsi": 56.12661044465094,
-      "pct_rsi_ob": 0.09741550695825049,
-      "pct_rsi_os": 0.015904572564612324,
-      "new_highs_pct": 0.19483101391650098,
-      "new_lows_pct": 0.0775347912524851,
-      "pct_strong_mom": 0.19681908548707752,
-      "pct_weak_mom": 0.10139165009940358,
-      "breadth_composite": 0.5586021926974786,
+      "advance_pct": 0.36182902584493043,
+      "pct_above_sma21": 0.5904572564612326,
+      "pct_above_sma200": 0.6302186878727635,
+      "pct_trending": 0.27435387673956263,
+      "pct_vol_high": 0.7137176938369781,
+      "pct_macd_bull": 0.5725646123260437,
+      "avg_rsi": 54.130845836371655,
+      "pct_rsi_ob": 0.0874751491053678,
+      "pct_rsi_os": 0.03180914512922465,
+      "new_highs_pct": 0.1411530815109344,
+      "new_lows_pct": 0.0874751491053678,
+      "pct_strong_mom": 0.20079522862823063,
+      "pct_weak_mom": 0.1272365805168986,
+      "breadth_composite": 0.49971181497512124,
       "breadth_regime": "Recovery",
-      "adv_dec_ratio": 2.4452054794520546,
-      "adv_dec_line": 72111.0,
+      "adv_dec_ratio": 0.5652173913043478,
+      "adv_dec_line": 71972.0,
       "is_capitulation": 0,
       "is_euphoria": 0,
       "is_bearish_divergence": 0,
@@ -699,7 +657,6 @@
     },
     "history_120d": {
       "dates": [
-        "2026-02-04",
         "2026-02-05",
         "2026-02-06",
         "2026-02-09",
@@ -818,10 +775,10 @@
         "2026-07-23",
         "2026-07-24",
         "2026-07-27",
-        "2026-07-28"
+        "2026-07-28",
+        "2026-07-29"
       ],
       "advance_pct": [
-        0.7128712871287128,
         0.36237623762376237,
         0.803960396039604,
         0.5306930693069307,
@@ -940,10 +897,10 @@
         0.4234592445328032,
         0.7216699801192843,
         0.6520874751491054,
-        0.709741550695825
+        0.709741550695825,
+        0.36182902584493043
       ],
       "pct_above_sma21": [
-        0.5702970297029702,
         0.5881188118811881,
         0.6059405940594059,
         0.6237623762376238,
@@ -1062,10 +1019,10 @@
         0.4970178926441352,
         0.4731610337972167,
         0.48906560636182905,
-        0.588469184890656
+        0.588469184890656,
+        0.5904572564612326
       ],
       "pct_above_sma200": [
-        0.6198019801980198,
         0.6198019801980198,
         0.6237623762376238,
         0.6297029702970297,
@@ -1184,10 +1141,10 @@
         0.6182902584493042,
         0.6202783300198808,
         0.6222664015904572,
-        0.6262425447316103
+        0.6262425447316103,
+        0.6302186878727635
       ],
       "avg_rsi": [
-        54.62713584473222,
         52.83156176993718,
         56.17029636567126,
         55.69341793492078,
@@ -1306,10 +1263,10 @@
         50.52729926790309,
         52.68218334717282,
         53.96241021116629,
-        56.12661044465094
+        56.12661044465094,
+        54.130845836371655
       ],
       "adv_dec_ratio": [
-        2.4657534246575343,
         0.5683229813664596,
         4.06,
         1.1355932203389831,
@@ -1428,10 +1385,10 @@
         0.7319587628865979,
         2.574468085106383,
         1.8636363636363635,
-        2.4452054794520546
+        2.4452054794520546,
+        0.5652173913043478
       ],
       "breadth_composite": [
-        0.5793548052892726,
         0.5242020830243029,
         0.62258525668132,
         0.5859470630205446,
@@ -1550,10 +1507,10 @@
         0.4423195909639676,
         0.501651967216854,
         0.5078589150442713,
-        0.5586021926974786
+        0.5586021926974786,
+        0.49971181497512124
       ],
       "pct_trending": [
-        0.48316831683168315,
         0.5069306930693069,
         0.5346534653465347,
         0.5485148514851486,
@@ -1672,10 +1629,10 @@
         0.23658051689860835,
         0.24652087475149106,
         0.2584493041749503,
-        0.268389662027833
+        0.268389662027833,
+        0.27435387673956263
       ],
       "pct_vol_high": [
-        0.5405940594059406,
         0.5504950495049505,
         0.5722772277227722,
         0.5683168316831683,
@@ -1794,10 +1751,10 @@
         0.6719681908548708,
         0.6520874751491054,
         0.658051689860835,
-        0.6878727634194831
+        0.6878727634194831,
+        0.7137176938369781
       ],
       "new_highs_pct": [
-        0.2712871287128713,
         0.2514851485148515,
         0.32673267326732675,
         0.3188118811881188,
@@ -1916,10 +1873,10 @@
         0.11332007952286283,
         0.14314115308151093,
         0.14910536779324055,
-        0.19483101391650098
+        0.19483101391650098,
+        0.1411530815109344
       ],
       "new_lows_pct": [
-        0.055445544554455446,
         0.0594059405940594,
         0.0594059405940594,
         0.05742574257425743,
@@ -2038,10 +1995,10 @@
         0.09145129224652088,
         0.08151093439363817,
         0.0775347912524851,
-        0.0775347912524851
+        0.0775347912524851,
+        0.0874751491053678
       ],
       "pct_strong_mom": [
-        0.25346534653465347,
         0.18613861386138614,
         0.30495049504950494,
         0.2495049504950495,
@@ -2160,10 +2117,10 @@
         0.11133200795228629,
         0.14910536779324055,
         0.18091451292246521,
-        0.19681908548707752
+        0.19681908548707752,
+        0.20079522862823063
       ],
       "pct_weak_mom": [
-        0.14257425742574256,
         0.18415841584158416,
         0.15643564356435644,
         0.1702970297029703,
@@ -2282,12 +2239,13 @@
         0.08349900596421471,
         0.09940357852882704,
         0.09940357852882704,
-        0.10139165009940358
+        0.10139165009940358,
+        0.1272365805168986
       ]
     },
     "regime_distribution_1y": {
-      "Recovery": 233,
-      "Bull": 14,
+      "Recovery": 234,
+      "Bull": 13,
       "Bear": 3,
       "Caution": 2
     },
@@ -2323,15 +2281,14 @@
   },
   "strategy_summary": {
     "total_tech_stocks": 75,
-    "total_qualifying": 2,
+    "total_qualifying": 1,
     "n_t1_dip": 0,
     "n_t1_mom": 0,
     "n_t2": 0,
-    "n_t3": 2
+    "n_t3": 1
   },
   "strategy_history": {
     "dates": [
-      "2024-10-29",
       "2024-11-12",
       "2024-11-26",
       "2024-12-11",
@@ -2390,7 +2347,8 @@
       "2026-07-22",
       "2026-07-23",
       "2026-07-24",
-      "2026-07-27"
+      "2026-07-27",
+      "2026-07-28"
     ],
     "t1_dip": [
       0,
@@ -2581,7 +2539,6 @@
     "t3": [
       1,
       1,
-      1,
       4,
       3,
       1,
@@ -2638,10 +2595,10 @@
       2,
       2,
       2,
+      2,
       2
     ],
     "breadth_composite": [
-      0.72,
       0.72,
       0.72,
       0.56,
@@ -2700,12 +2657,12 @@
       0.469409862329268,
       0.4423195909639676,
       0.501651967216854,
-      0.50777283108911
+      0.50777283108911,
+      0.5586021926974786
     ],
     "regime": [
       "STRONG_UP",
       "STRONG_UP",
-      "STRONG_UP",
       "UP",
       "UP",
       "WEAK",
@@ -2748,6 +2705,7 @@
       "WEAK",
       "WEAK",
       "UP",
+      "WEAK",
       "WEAK",
       "WEAK",
       "WEAK",
