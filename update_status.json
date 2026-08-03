@@ -1,22 +1,22 @@
 {
-  "last_update": "2026-08-02T19:43:09.022610",
+  "last_update": "2026-08-03T19:12:18.667565",
   "status": "success",
   "steps": {
     "Fetch S&P 500 Stock Data": {
       "ok": true,
-      "time": 197.3
+      "time": 168.6
     },
     "Fetch ETF & Market Data": {
       "ok": true,
-      "time": 24.2
+      "time": 21.7
     },
     "Rebuild Features Table": {
       "ok": true,
-      "time": 849.5
+      "time": 75.2
     },
     "Generate Dashboard Data": {
       "ok": true,
-      "time": 194.0
+      "time": 19.3
     }
   }
 }

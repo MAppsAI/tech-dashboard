@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-02T19:43:08.776784",
+  "generated_at": "2026-08-03T19:12:18.511534",
   "date": "2026-07-31",
   "data_freshness": {
     "is_stale": false,
-    "days_behind": 2,
-    "today": "2026-08-02"
+    "days_behind": 3,
+    "today": "2026-08-03"
   },
   "market_status": {
     "regime": "WEAK",
